@@ -49,6 +49,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		3B059C5C15AD05EB005775CD /* LabelTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AC093012280BB900EFA814 /* LabelTest.m */; };
 		4AD3B6FC15991C48002E68D1 /* ThoMoClientStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6EE15991A64002E68D1 /* ThoMoClientStub.m */; };
 		4AD3B6FD15991C48002E68D1 /* ThoMoNetworkStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6F315991A64002E68D1 /* ThoMoNetworkStub.m */; };
 		4AD3B6FE15991C48002E68D1 /* ThoMoServerStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6F615991A64002E68D1 /* ThoMoServerStub.m */; };
@@ -6460,7 +6461,7 @@
 		E076E6781225EC7400DE0DA2 /* CCScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCScheduler.h; sourceTree = "<group>"; };
 		E076E6791225EC7400DE0DA2 /* CCScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCScheduler.m; sourceTree = "<group>"; };
 		E076E67A1225EC7400DE0DA2 /* CCSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSprite.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		E076E67B1225EC7400DE0DA2 /* CCSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSprite.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		E076E67B1225EC7400DE0DA2 /* CCSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSprite.m; sourceTree = "<group>"; };
 		E076E67C1225EC7400DE0DA2 /* CCSpriteBatchNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSpriteBatchNode.h; sourceTree = "<group>"; };
 		E076E67D1225EC7400DE0DA2 /* CCSpriteBatchNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSpriteBatchNode.m; sourceTree = "<group>"; };
 		E076E67E1225EC7400DE0DA2 /* CCSpriteFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSpriteFrame.h; sourceTree = "<group>"; };
@@ -14915,6 +14916,7 @@
 				E026450C12A59DA7009D04FE /* main.m in Sources */,
 				E026451E12A59E07009D04FE /* ParticleTest.m in Sources */,
 				A04443EE14A91DB600E62742 /* BaseAppController.m in Sources */,
+				3B059C5C15AD05EB005775CD /* LabelTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

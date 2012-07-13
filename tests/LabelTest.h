@@ -159,3 +159,18 @@
 {
 }
 @end
+
+@interface BitmapFontLineheightAdjustment : AtlasDemo
+{
+  CCLabelBMFont *label_;
+  CCSprite *arrowsBar_;
+  CCSprite *arrows_;
+  CCMenuItemFont *lastSentenceItem_;
+  
+  BOOL drag_;
+}
+@property (nonatomic,retain) CCLabelBMFont *label;
+@property (nonatomic,retain) CCSprite *arrowsBar;
+@property (nonatomic,retain) CCSprite *arrows;
+- (void)snapArrowsToEdge;
+@end
