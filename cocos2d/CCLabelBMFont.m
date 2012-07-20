@@ -723,13 +723,13 @@ void FNTConfigRemoveCache( void )
 	float value = 0;
 	switch (topDisplay_) {
 		case kCCLabelTopDisplayAscender:
-			value = (configuration_->commonHeight_ - configuration_->ascenderHeight_) / CC_CONTENT_SCALE_FACTOR();
+			value = configuration_->commonHeight_ - configuration_->ascenderHeight_;
 			break;
 		case kCCLabelTopDisplayCapHeight:
-			value = (configuration_->commonHeight_ - configuration_->capHeight_) / CC_CONTENT_SCALE_FACTOR();
+			value = configuration_->commonHeight_ - configuration_->capHeight_;
 			break;
 		case kCCLabelTopDisplayXHeight:
-			value = (configuration_->commonHeight_ -configuration_->xHeight_) / CC_CONTENT_SCALE_FACTOR();
+			value = configuration_->commonHeight_ - configuration_->xHeight_;
 			break;
 	}
 	return value;
@@ -865,7 +865,7 @@ void FNTConfigRemoveCache( void )
 		float yOffset = adjustedLineHeight - fontDef.yOffset;
 		CGPoint fontPos = ccp( (CGFloat)nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width*0.5f + kerningAmount,
 							  (CGFloat)nextFontPositionY + yOffset - rect.size.height*0.5f * CC_CONTENT_SCALE_FACTOR() );
-        fontChar.position = CC_POINT_PIXELS_TO_POINTS(fontPos);
+		fontChar.position = CC_POINT_PIXELS_TO_POINTS(fontPos);
 		
 		// update kerning
 		nextFontPositionX += fontDef.xAdvance + kerningAmount;

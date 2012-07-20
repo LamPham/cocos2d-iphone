@@ -1840,7 +1840,7 @@ static float menuItemPaddingCenter = 50;
     
 		// create and initialize a Label, we created a subclass just for this test to enable
 		// debug drawing
-		self.label = [CCLabelBMFontDebug labelWithString:@"Lorem ipsum dolor sit amet, consectetur adipisicing elit" fntFile:@"helvetica-32.fnt" width:size.width/1.5 alignment:kCCTextAlignmentCenter];
+		self.label = [CCLabelBMFontDebug labelWithString:LongSentencesExample fntFile:@"konqa32.fnt" width:size.width/1.5 alignment:kCCTextAlignmentCenter];
     //self.label.debug = YES;
     
     self.arrowsBar = [CCSprite spriteWithFile:@"arrowsBar.png"];
