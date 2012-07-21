@@ -326,58 +326,37 @@
 @end
 
 @implementation CCTextureRotateTo
-+(id) actionWithDuration: (ccTime) t angleX:(float)aX angleY:(float)aY
-{	
-	return [[[self alloc] initWithDuration:t angleX:aX angleY:aY] autorelease];
-}
-
--(id) initWithDuration: (ccTime) t angleX:(float)aX angleY:(float)aY
-{
-	if( (self=[super initWithDuration: t]) ) {	
-		angleX_ = aX;
-		angleY_ = aY;
-	}
-	return self;
-}
-
--(id) copyWithZone: (NSZone*) zone
-{
-	CCAction *copy = [[[self class] allocWithZone: zone] initWithDuration:[self duration] angleX:angleX_ angleY:angleY_];
-	return copy;
-}
 
 -(void) startWithTarget:(CCNode *)aTarget
 {
-	[super startWithTarget:aTarget];
+	originalTarget_ = target_ = aTarget;
+	elapsed_ = 0.0f;
+	firstTick_ = YES;
 	
-	startAngleX_ = [target_ textureRotationX];
-	if (startAngleX_ > 0)
-		startAngleX_ = fmodf(startAngleX_, 360.0f);
-	else
-		startAngleX_ = fmodf(startAngleX_, -360.0f);
+  //Calculate X
+	startAngleX_ = [target_ rotationX];
 	
-	angleX_ -= startAngleX_;
-	if (angleX_ > 180)
-		angleX_ = -360 + angleX_;
-	if (angleX_ < -180)
-		angleX_ = 360 + angleX_;
-	
-	startAngleY_ = [target_ textureRotationY];
+	diffAngleX_ = dstAngleX_ - startAngleX_;
+	if (diffAngleX_ > 180)
+		diffAngleX_ -= 360;
+	if (diffAngleX_ < -180)
+		diffAngleX_ += 360;
+  
+  //Calculate Y
+	startAngleY_ = [target_ rotationY];
 	if (startAngleY_ > 0)
 		startAngleY_ = fmodf(startAngleY_, 360.0f);
 	else
 		startAngleY_ = fmodf(startAngleY_, -360.0f);
-	
-	angleY_ -= startAngleY_;
-	if (angleY_ > 180)
-		angleY_ = -360 + angleY_;
-	if (angleY_ < -180)
-		angleY_ = 360 + angleY_;
+  
+	diffAngleY_ = dstAngleY_ - startAngleY_;
+	if (diffAngleY_ > 180)
+		diffAngleY_ -= 360;
 }
 -(void) update: (ccTime) t
 {
-	[target_ setTextureRotationX:startAngleX_ + angleX_ * t];
-	[target_ setTextureRotationY:startAngleY_ + angleY_ * t];
+	[target_ setTextureRotationX:startAngleX_ + diffAngleX_ * t];
+	[target_ setTextureRotationY:startAngleY_ + diffAngleY_ * t];
 }
 @end
 

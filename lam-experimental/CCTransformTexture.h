@@ -120,13 +120,7 @@ typedef struct TextureTransform_t {
 @interface CCTextureMoveBy : CCTextureMoveTo<NSCopying>
 @end
 
-@interface CCTextureRotateTo : CCActionInterval<NSCopying>
-{
-	float angleX_, angleY_;
-	float startAngleX_, startAngleY_;
-}
-+(id) actionWithDuration: (ccTime) t angleX:(float)aX angleY:(float)aY;
--(id) initWithDuration: (ccTime) t angleX:(float)aX angleY:(float)aY;
+@interface CCTextureRotateTo : CCRotateTo<NSCopying>
 @end
 
 @interface CCTextureRotateBy : CCRotateBy<NSCopying>
