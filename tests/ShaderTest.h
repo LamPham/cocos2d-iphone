@@ -76,3 +76,30 @@
 }
 @end
 
+
+
+@class CCSpriteBatchNodeBlur;
+@interface ShaderBatchBlur : ShaderTest
+{
+	CCSpriteBatchNodeBlur *blurSpriteBatch;
+	
+#ifdef __CC_PLATFORM_IOS
+	UISlider	*sliderCtl_;
+#elif defined(__CC_PLATFORM_MAC)
+	NSSlider	*sliderCtl_;
+	NSWindow	*overlayWindow;
+#endif
+}
+#ifdef __CC_PLATFORM_IOS
+@property(nonatomic, retain) UISlider *sliderCtl;
+#elif defined(__CC_PLATFORM_MAC)
+@property(nonatomic, retain) NSSlider *sliderCtl;
+#endif
+
+#ifdef __CC_PLATFORM_IOS
+-(UISlider*) createSliderCtl;
+#elif defined(__CC_PLATFORM_MAC)
+-(NSSlider*) createSliderCtl;
+#endif
+
+@end

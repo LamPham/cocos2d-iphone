@@ -21,6 +21,7 @@ static NSString *transitions[] = {
 	@"ShaderPlasma",
 	@"ShaderBlur",
 	@"ShaderRetroEffect",
+	@"ShaderBatchBlur",
 };
 
 Class nextAction()
@@ -691,6 +692,266 @@ enum {
 	return @"sin() effect with moving colors";
 }
 @end
+
+
+
+#pragma mark -
+#pragma mark ShaderBlur
+
+@interface CCSpriteBatchNodeBlur : CCSpriteBatchNode
+{
+	CGPoint blur_;
+	GLfloat	sub_[4];
+	
+	GLuint	blurLocation;
+	GLuint	subLocation;
+}
+
+-(void) setBlurSize:(CGFloat)f;
+@end
+
+
+@implementation CCSpriteBatchNodeBlur
+-(id)initWithTexture:(CCTexture2D *)tex capacity:(NSUInteger)capacity
+{
+	if( (self=[super initWithTexture:tex capacity:capacity]) ) {
+		
+		CGSize s = [self.texture contentSizeInPixels];
+		
+		blur_ = ccp(1/s.width, 1/s.height);
+		sub_[0] = sub_[1] = sub_[2] = sub_[3] = 0;
+		
+		GLchar * fragSource = (GLchar*) [[NSString stringWithContentsOfFile:[[CCFileUtils sharedFileUtils] fullPathFromRelativePath:@"example_Blur.fsh"] encoding:NSUTF8StringEncoding error:nil] UTF8String];
+		shaderProgram_ = [[CCGLProgram alloc] initWithVertexShaderByteArray:ccPositionTextureColor_vert fragmentShaderByteArray:fragSource];
+		
+		
+		CHECK_GL_ERROR_DEBUG();
+		
+		[shaderProgram_ addAttribute:kCCAttributeNamePosition index:kCCVertexAttrib_Position];
+		[shaderProgram_ addAttribute:kCCAttributeNameColor index:kCCVertexAttrib_Color];
+		[shaderProgram_ addAttribute:kCCAttributeNameTexCoord index:kCCVertexAttrib_TexCoords];
+		
+		CHECK_GL_ERROR_DEBUG();
+		
+		[shaderProgram_ link];
+		
+		CHECK_GL_ERROR_DEBUG();
+		
+		[shaderProgram_ updateUniforms];
+		
+		CHECK_GL_ERROR_DEBUG();
+		
+		subLocation = glGetUniformLocation( shaderProgram_->program_, "substract");
+		blurLocation = glGetUniformLocation( shaderProgram_->program_, "blurSize");
+		
+		CHECK_GL_ERROR_DEBUG();
+	}
+	
+	return self;
+}
+
+-(void) draw
+{
+	
+	CC_PROFILER_START(@"CCSpriteBatchNode - draw");
+	
+	// Optimization: Fast Dispatch
+	if( textureAtlas_.totalQuads == 0 )
+		return;
+	
+	[shaderProgram_ use];
+	[shaderProgram_ setUniformsForBuiltins];
+	[shaderProgram_ setUniformLocation:blurLocation withF1:blur_.x f2:blur_.y];
+	[shaderProgram_ setUniformLocation:subLocation with4fv:sub_ count:1];
+	
+	
+	[children_ makeObjectsPerformSelector:@selector(updateTransform)];
+	
+	ccGLBlendFunc( blendFunc_.src, blendFunc_.dst );
+	
+	[textureAtlas_ drawQuads];
+	
+	CC_PROFILER_STOP(@"CCSpriteBatchNode - draw");
+}
+
+-(void) setBlurSize:(CGFloat)f
+{
+	CGSize s = [self.texture contentSizeInPixels];
+	
+	blur_ = ccp(1/s.width, 1/s.height);
+	blur_ = ccpMult(blur_,f);
+}
+
+@end
+
+
+@implementation ShaderBatchBlur
+
+@synthesize sliderCtl=sliderCtl_;
+
+-(id) init
+{
+	if( (self=[super init] ) ) {
+		
+		blurSpriteBatch = [CCSpriteBatchNodeBlur batchNodeWithFile:@"grossini.png"];
+		CCSprite *sprite = [CCSprite spriteWithFile:@"grossini.png"];
+		
+		CGSize s = [[CCDirector sharedDirector] winSize];
+		[self addNewSpriteWithCoords:ccp(s.width/3, s.height/2)];
+		
+		[self addChild:blurSpriteBatch];
+		[blurSpriteBatch addChild:sprite];
+		
+		self.sliderCtl = [self createSliderCtl];
+		
+#ifdef __CC_PLATFORM_IOS
+		self.isTouchEnabled = YES;
+#elif defined(__CC_PLATFORM_MAC)
+		self.isMouseEnabled = YES;
+#endif
+		
+#ifdef __CC_PLATFORM_IOS
+		
+		AppController *app = (AppController*) [[UIApplication sharedApplication] delegate];
+		UIViewController *ctl = [app navController];
+		
+		[ctl.view addSubview: sliderCtl_];
+		
+#elif defined(__CC_PLATFORM_MAC)
+		CCGLView *view = [[CCDirector sharedDirector] view];
+		
+		if( ! overlayWindow ) {
+			overlayWindow  = [[NSWindow alloc] initWithContentRect:[[view window] frame]
+																									 styleMask:NSBorderlessWindowMask
+																										 backing:NSBackingStoreBuffered
+																											 defer:NO];
+			
+			[overlayWindow setFrame:[[view window] frame] display:NO];
+			
+			[[overlayWindow contentView] addSubview:sliderCtl_];
+			[overlayWindow setParentWindow:[view window]];
+			[overlayWindow setOpaque:NO];
+			[overlayWindow makeKeyAndOrderFront:nil];
+			[overlayWindow setBackgroundColor:[NSColor clearColor]];
+			[[overlayWindow contentView] display];
+		}
+		
+		[[view window] addChildWindow:overlayWindow ordered:NSWindowAbove];
+		[overlayWindow release];
+#endif
+	}
+	
+	return self;
+}
+
+-(void) dealloc
+{
+	[sliderCtl_ release];
+	[sliderCtl_ removeFromSuperview];
+	
+	[super dealloc];
+}
+
+-(void) addNewSpriteWithCoords:(CGPoint)p
+{
+	CCSprite *sprite = [CCSprite spriteWithFile:@"grossini.png"];
+	[blurSpriteBatch addChild:sprite];
+	
+	sprite.position = p;
+	
+	id action;
+	float rand = CCRANDOM_0_1();
+	
+	if( rand < 0.20 )
+		action = [CCScaleBy actionWithDuration:3 scale:2];
+	else if(rand < 0.40)
+		action = [CCRotateBy actionWithDuration:3 angle:360];
+	else if( rand < 0.60)
+		action = [CCBlink actionWithDuration:1 blinks:3];
+	else if( rand < 0.8 )
+		action = [CCTintBy actionWithDuration:2 red:0 green:-255 blue:-255];
+	else
+		action = [CCFadeOut actionWithDuration:2];
+	id action_back = [action reverse];
+	id seq = [CCSequence actions:action, action_back, nil];
+	
+	[sprite runAction: [CCRepeatForever actionWithAction:seq]];
+}
+
+#ifdef __CC_PLATFORM_IOS
+- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+	for( UITouch *touch in touches ) {
+		CGPoint location = [touch locationInView: [touch view]];
+		
+		location = [[CCDirector sharedDirector] convertToGL: location];
+		
+		[self addNewSpriteWithCoords: location];
+	}
+}
+#elif defined(__CC_PLATFORM_MAC)
+-(BOOL) ccMouseUp:(NSEvent *)event
+{
+	CGPoint location = [[CCDirector sharedDirector] convertEventToGL:event];
+	[self addNewSpriteWithCoords: location];
+	
+	return YES;
+	
+}
+#endif
+
+-(NSString *) title
+{
+	return @"Shader: Frag shader";
+}
+
+-(NSString *) subtitle
+{
+	return @"Gaussian blur on batch node";
+}
+
+#ifdef __CC_PLATFORM_IOS
+-(UISlider*) createSliderCtl
+{
+	CGRect frame = CGRectMake(40.0f, 110.0f, 240.0f, 7.0f);
+	UISlider *slider = [[UISlider alloc] initWithFrame:frame];
+	[slider addTarget:self action:@selector(sliderAction:) forControlEvents:UIControlEventValueChanged];
+	
+	// in case the parent view draws with a custom color or gradient, use a transparent color
+	slider.backgroundColor = [UIColor clearColor];
+	
+	slider.minimumValue = 0.0f;
+	slider.maximumValue = 3.0f;
+	slider.continuous = YES;
+	slider.value = 1.0f;
+	
+	return [slider autorelease];
+}
+#elif defined(__CC_PLATFORM_MAC)
+-(NSSlider*) createSliderCtl
+{
+	NSSlider *slider = [[NSSlider alloc] initWithFrame: NSMakeRect(200, 350, 240, 20)];
+	[slider setMinValue: 0];
+	[slider setMaxValue: 3];
+	[slider setFloatValue: 1];
+	[slider setAction: @selector (sliderAction:)];
+	[slider setTarget: self];
+	[slider setContinuous: YES];
+	
+	return [slider autorelease];
+}
+#endif // Mac
+
+-(void) sliderAction:(id) sender
+{
+#ifdef __CC_PLATFORM_IOS
+	[blurSpriteBatch setBlurSize: sliderCtl_.value];
+#elif defined(__CC_PLATFORM_MAC)
+	[blurSpriteBatch setBlurSize: [sliderCtl_ floatValue]];
+#endif
+}
+@end
+
 
 
 // CLASS IMPLEMENTATIONS
