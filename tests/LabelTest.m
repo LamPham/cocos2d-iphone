@@ -40,7 +40,7 @@ static NSString *transitions[] = {
 
 	// Not a label test. Should be moved to Atlas test
 	@"Atlas1",
-    
+  @"BitmapFontLineheightAdjustment",
 };
 
 enum {
@@ -990,10 +990,10 @@ static float menuItemPaddingCenter = 50;
             [self.label setAlignment:kCCTextAlignmentLeft];
             break;
         case CenterAlign:
-            [self.label setAlignment:kCCTextAlignmentCenter];
+            [self.label setBottomDisplay:kCCTextAlignmentCenter];
             break;
         case RightAlign:
-            [self.label setAlignment:kCCTextAlignmentRight];
+            [self.label setBottomDisplay:kCCTextAlignmentRight];
             break;
 
         default:
@@ -1784,6 +1784,255 @@ static float menuItemPaddingCenter = 50;
 }
 @end
 
+#pragma mark -
+#pragma mark BitmapFontLineheightAdjustment
+
+#define DisplayBottomLineHeight 0
+#define DisplayBottomDescender 1
+#define DisplayBottomBaseline 2
+
+#define DisplayTopAscender 3
+#define DisplayTopCapHeight 4
+#define DisplayTopXHeight 5
+
+/**
+ *	CCLabelBMFontDebug enables the contentSize outline otherwise it would be pretty
+ *	hard to understand how the new bottomDisplay and topDisplayProperties work.
+ *	Just in case we don't have CC_LABELBMFONT_DEBUG_DRAW enabled
+ */
+@interface CCLabelBMFontDebug : CCLabelBMFont
+@end
+@implementation CCLabelBMFontDebug
+-(void) draw
+{
+	[super draw];
+	
+	CGSize s = [self contentSize];
+	CGPoint vertices[4]={
+		ccp(0,0),ccp(s.width,0),
+		ccp(s.width,s.height),ccp(0,s.height),
+	};
+	ccDrawPoly(vertices, 4, YES);
+}
+@end
+
+@implementation BitmapFontLineheightAdjustment
+
+@synthesize label = label_;
+@synthesize arrowsBar = arrowsBar_;
+@synthesize arrows = arrows_;
+
+// on "init" you need to initialize your instance
+-(id) init
+{
+	// always call "super" init
+	// Apple recommends to re-assign "self" with the "super" return value
+	if( (self=[super init])) {
+    
+#ifdef __CC_PLATFORM_IOS
+    self.isTouchEnabled = YES;
+#elif defined(__CC_PLATFORM_MAC)
+		self.isMouseEnabled = YES;
+#endif
+    
+		// ask director the the window size
+		CGSize size = [[CCDirector sharedDirector] winSize];
+    
+		// create and initialize a Label, we created a subclass just for this test to enable
+		// debug drawing
+		self.label = [CCLabelBMFontDebug labelWithString:LongSentencesExample fntFile:@"konqa32.fnt" width:size.width/1.5 alignment:kCCTextAlignmentCenter];
+    //self.label.debug = YES;
+    
+    self.arrowsBar = [CCSprite spriteWithFile:@"arrowsBar.png"];
+    self.arrows = [CCSprite spriteWithFile:@"arrows.png"];
+    [self.arrows setRotation:90];
+		
+    [CCMenuItemFont setFontSize:12];
+		
+    CCMenuItemFont *ascender = [CCMenuItemFont itemWithString:@"Ascender" target:self selector:@selector(displayChanged:)];
+    CCMenuItemFont *capHeight = [CCMenuItemFont itemWithString:@"CapHeight" target:self selector:@selector(displayChanged:)];
+    CCMenuItemFont *xHeight = [CCMenuItemFont itemWithString:@"XHeight" target:self selector:@selector(displayChanged:)];
+    CCMenu *topDisplayMenu = [CCMenu menuWithItems:ascender,capHeight,xHeight, nil];
+    [topDisplayMenu alignItemsHorizontallyWithPadding:20];
+    
+    CCMenuItemFont *lineHeight = [CCMenuItemFont itemWithString:@"LineHeight" target:self selector:@selector(displayChanged:)];
+    CCMenuItemFont *descender = [CCMenuItemFont itemWithString:@"Descender" target:self selector:@selector(displayChanged:)];
+    CCMenuItemFont *baseline = [CCMenuItemFont itemWithString:@"Baseline" target:self selector:@selector(displayChanged:)];
+    CCMenu *bottomDisplayMenu = [CCMenu menuWithItems:lineHeight, descender, baseline, nil];
+    [bottomDisplayMenu alignItemsHorizontallyWithPadding:20];
+    
+    lineHeight.tag = DisplayBottomLineHeight;
+    descender.tag = DisplayBottomDescender;
+    baseline.tag = DisplayBottomBaseline;
+    ascender.tag = DisplayTopAscender;
+    capHeight.tag = DisplayTopCapHeight;
+    xHeight.tag = DisplayTopXHeight;
+    
+		// position the label on the center of the screen
+		self.label.position =  ccp( size.width/2 , size.height/2 );
+    
+    self.arrowsBar.visible = NO;
+    
+    float arrowsHeight =  size.height / 3;
+    self.arrowsBar.scaleY = arrowsHeight / self.arrowsBar.contentSize.height;
+    self.arrowsBar.position = ccp(0.9 * size.width, size.height/2);
+    self.arrows.position = self.arrowsBar.position;
+    
+    [self snapArrowsToEdge];
+    
+    topDisplayMenu.position = ccp(size.width/2, size.height - menuItemPaddingCenter);
+		
+#ifdef __CC_PLATFORM_IOS
+    bottomDisplayMenu.position = ccp(size.width/2, (menuItemPaddingCenter+15) * (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad ? 2 : 1) );
+#elif defined(__CC_PLATFORM_MAC)
+    bottomDisplayMenu.position = ccp(size.width/2, (menuItemPaddingCenter+15));
+#endif
+    
+		// add the label as a child to this Layer
+		[self addChild:self.label];
+    [self addChild:self.arrowsBar];
+    [self addChild:self.arrows];
+    [self addChild:topDisplayMenu];
+    [self addChild:bottomDisplayMenu];
+	}
+	return self;
+}
+
+// on "dealloc" you need to release all your retained objects
+- (void) dealloc
+{
+  self.label = nil;
+  self.arrows = nil;
+  self.arrowsBar = nil;
+  
+	[super dealloc];
+}
+
+#pragma mark Action Methods
+
+- (void)displayChanged:(id)sender {
+  CCMenuItemFont *item = sender;
+	
+  switch (item.tag) {
+    case DisplayBottomLineHeight:
+      [self.label setBottomDisplay:kCCLabelBottomDisplayLineHeight];
+      break;
+    case DisplayBottomDescender:
+      [self.label setBottomDisplay:kCCLabelBottomDisplayDescender];
+      break;
+    case DisplayBottomBaseline:
+      [self.label setBottomDisplay:kCCLabelBottomDisplayBaseline];
+      break;
+    case DisplayTopAscender:
+      [self.label setTopDisplay:kCCLabelTopDisplayAscender];
+      break;
+    case DisplayTopCapHeight:
+      [self.label setTopDisplay:kCCLabelTopDisplayCapHeight];
+      break;
+    case DisplayTopXHeight:
+      [self.label setTopDisplay:kCCLabelTopDisplayXHeight];
+      break;
+    default:
+      break;
+  }
+  
+  [self snapArrowsToEdge];
+}
+
+#pragma mark Touch Methods
+
+#ifdef __CC_PLATFORM_IOS
+- (void)ccTouchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+  UITouch *touch = [touches anyObject];
+  CGPoint location = [[CCDirector sharedDirector] convertTouchToGL:touch];
+  
+  if (CGRectContainsPoint([self.arrows boundingBox], location)) {
+    drag_ = YES;
+    self.arrowsBar.visible = YES;
+  }
+}
+
+- (void)ccTouchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+  drag_ = NO;
+  [self snapArrowsToEdge];
+  
+  self.arrowsBar.visible = NO;
+}
+
+- (void)ccTouchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+  if (!drag_) return;
+  
+  UITouch *touch = [touches anyObject];
+  CGPoint location = [[CCDirector sharedDirector]convertTouchToGL:touch];
+  
+  self.arrows.position = ccp(self.arrows.position.x, MAX(MIN(location.y, self.arrowsBar.position.y + self.arrowsBar.boundingBox.size.height/2), self.arrowsBar.position.y - self.arrowsBar.boundingBox.size.height/2));
+  
+  float lineHeight = 1.0 + 8*((self.arrows.position.y - self.arrowsBar.boundingBox.origin.y)/ self.arrowsBar.boundingBox.size.height - 0.5);
+  [self.label setLineHeight: lineHeight];
+}
+
+#elif defined(__CC_PLATFORM_MAC)
+
+- (BOOL)ccMouseDown:(NSEvent*)event
+{
+	CGPoint location = [[CCDirector sharedDirector] convertEventToGL:event];
+  
+  if (CGRectContainsPoint([self.arrows boundingBox], location)) {
+    drag_ = YES;
+    self.arrowsBar.visible = YES;
+    
+		return YES;
+  }
+	return  NO;
+}
+
+- (BOOL)ccMouseUp:(NSEvent*)event
+{
+  drag_ = NO;
+  [self snapArrowsToEdge];
+  
+  self.arrowsBar.visible = NO;
+  
+	return NO;
+}
+
+- (BOOL)ccMouseDragged:(NSEvent*)event
+{
+  if ( drag_) {
+    
+		CGPoint location = [[CCDirector sharedDirector] convertEventToGL:event];
+    
+		CGSize winSize = [CCDirector sharedDirector].winSize;
+    
+    self.arrows.position = ccp(self.arrows.position.x, MAX(MIN(location.y, ArrowsMin*winSize.height), ArrowsMax*winSize.height));
+    
+    float lineHeight = (self.arrows.position.y - self.label.position.y)/ArrowsMax*winSize.height;
+    
+    [self.label setLineHeight: lineHeight];
+    
+		return YES;
+	}
+  
+	return NO;
+}
+
+#endif // __CC_PLATFORM_MAC
+
+- (void)snapArrowsToEdge {
+  self.arrows.position = ccp(self.arrowsBar.position.x, self.arrows.position.y);
+}
+
+-(NSString*) title
+{
+	return @"";
+}
+
+-(NSString *) subtitle
+{
+	return @"";
+}
+
+@end
 
 #pragma mark -
 #pragma mark Application Delegate - iPhone

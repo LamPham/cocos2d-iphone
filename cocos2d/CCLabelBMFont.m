@@ -102,6 +102,10 @@ void FNTConfigRemoveCache( void )
         
 		kerningDictionary_ = NULL;
 		fontDefDictionary_ = NULL;
+		xHeight_ = 0;
+		base_ = 0;
+		capHeight_ = 0;
+		ascenderHeight_ = 0;
         
 		if( ! [self parseConfigFile:fntFile] ) {
 			[self release];
@@ -196,6 +200,16 @@ void FNTConfigRemoveCache( void )
 			
 			element->key = element->fontDef.charID;
 			HASH_ADD_INT(fontDefDictionary_, key, element);
+			float nextAscender =  element->fontDef.rect.size.height - element->fontDef.yOffset;
+			if (ascenderHeight_ < nextAscender) {
+				ascenderHeight_ = nextAscender;
+			}
+			
+			//  Now we determine the cap height, I chose H,I,T to determine the cap height.
+			//	Not sure if there's an easier way but those are Flat on top and capitalized
+			if (element->fontDef.charID == 'H' || element->fontDef.charID == 'I' || element->fontDef.charID == 'T') {
+				capHeight_ = MAX(capHeight_, element->fontDef.rect.size.height - element->fontDef.yOffset);
+			}
 		}
         //		else if([line hasPrefix:@"kernings count"]) {
         //			[self parseKerningCapacity:line];
@@ -207,6 +221,16 @@ void FNTConfigRemoveCache( void )
 	// Finished with lines so release it
 	[lines release];
 	
+  //  Now we determine the xHeight which helps us handle different text displays
+  //  The default xHeight is the base height in case we don't have an x.
+  xHeight_ = base_;
+  tCCFontDefHashElement *element;
+  unsigned int key = 'x';
+  HASH_FIND_INT(fontDefDictionary_ , &key, element);
+  if (element) {
+    xHeight_ = element->fontDef.rect.size.height - element->fontDef.yOffset;
+  }
+  
 	return  YES;
 }
 
@@ -327,9 +351,9 @@ void FNTConfigRemoveCache( void )
 	propertyValue = [nse nextObject];
 	commonHeight_ = [propertyValue intValue];
     
-	// base (ignore)
-	[nse nextObject];
-    
+	// base
+	propertyValue = [nse nextObject];
+	base_ = [propertyValue intValue];
     
 	// scaleW. sanity check
 	propertyValue = [nse nextObject];
@@ -429,8 +453,11 @@ void FNTConfigRemoveCache( void )
 @implementation CCLabelBMFont
 
 @synthesize alignment = alignment_;
+@synthesize verticalAlignment = vAlignment_;
 @synthesize opacity = opacity_, color = color_;
-
+@synthesize lineHeight = lineHeight_;
+@synthesize bottomDisplay = bottomDisplay_;
+@synthesize topDisplay = topDisplay_;
 
 #pragma mark LabelBMFont - Purge Cache
 +(void) purgeCachedData
@@ -506,8 +533,11 @@ void FNTConfigRemoveCache( void )
 		opacityModifyRGB_ = [[textureAtlas_ texture] hasPremultipliedAlpha];
 		
 		anchorPoint_ = ccp(0.5f, 0.5f);
-        
+    
+    lineHeight_ = 1;
 		imageOffset_ = offset;
+    topDisplay_ = kCCLabelTopDisplayAscender;
+    bottomDisplay_ = kCCLabelBottomDisplayLineHeight;
         
 		[self setString:theString updateLabel:YES];
 	}
@@ -685,17 +715,70 @@ void FNTConfigRemoveCache( void )
 	return ret;
 }
 
+/**
+ *	@return the top display height based on the topDislay property
+ */
+-(float)topDisplayHeight
+{
+	float value = 0;
+	switch (topDisplay_) {
+		case kCCLabelTopDisplayAscender:
+			value = configuration_->commonHeight_ - configuration_->ascenderHeight_;
+			break;
+		case kCCLabelTopDisplayCapHeight:
+			value = configuration_->commonHeight_ - configuration_->capHeight_;
+			break;
+		case kCCLabelTopDisplayXHeight:
+			value = configuration_->commonHeight_ - configuration_->xHeight_;
+			break;
+	}
+	return value;
+}
+
+/**
+ *	@params	adjustedByLineHeight	the text at the bottom can be affected by lineHeight
+ *	@return the bottom display height based on the bottomDisplay property.
+ */
+-(float)bottomDisplayHeight:(BOOL)adjustedByLineHeight
+{
+	float value = 0;
+	switch (bottomDisplay_) {
+		case kCCLabelBottomDisplayLineHeight:
+			//	The default height of the text is the common line height including any
+			//	extra height due to the line height scalar
+			value = configuration_->commonHeight_;
+			if (adjustedByLineHeight) value *= lineHeight_;
+			break;
+		case kCCLabelBottomDisplayDescender:
+			//	We use the common line height including but we won't allow the extra 
+			//	space at the end so we clamp up to the descender
+			value = configuration_->commonHeight_;
+			if (adjustedByLineHeight) value *= MIN(lineHeight_, 1);
+			break;
+		case kCCLabelBottomDisplayBaseline:
+			//	We find the adjusted line height but we clip the height to the baseline.
+			value = configuration_->commonHeight_;
+			if (adjustedByLineHeight) value *= lineHeight_;
+			value = MIN(value, configuration_->base_);
+			break;
+			
+		default:
+			break;
+	}
+	return value;
+}
+
 -(void) createFontChars
 {
 	NSInteger nextFontPositionX = 0;
-	NSInteger nextFontPositionY = 0;
+	float nextFontPositionY = 0;
 	unichar prev = -1;
 	NSInteger kerningAmount = 0;
     
 	CGSize tmpSize = CGSizeZero;
     
 	NSInteger longestLine = 0;
-	NSUInteger totalHeight = 0;
+	float totalHeight = 0;
     
 	NSUInteger quantityOfLines = 1;
     
@@ -710,16 +793,36 @@ void FNTConfigRemoveCache( void )
 		if( c=='\n')
 			quantityOfLines++;
 	}
-    
-	totalHeight = configuration_->commonHeight_ * quantityOfLines;
-	nextFontPositionY = -(configuration_->commonHeight_ - configuration_->commonHeight_*quantityOfLines);
+	
+	// We substitute the regular common line height with an adjustable line height
+	float adjustedLineHeight = configuration_->commonHeight_ * lineHeight_;
+	
+	// Get the top half height of a character and align it to the top
+	float topHeight = [self topDisplayHeight];
+	nextFontPositionY += topHeight;
+	
+	if (quantityOfLines == 1) {
+		// When we have only 1 line of text we deal with the bottom and top display height at once
+		totalHeight += MAX([self bottomDisplayHeight:YES] - topHeight, [self bottomDisplayHeight:NO] - topHeight);
+	} else {
+		// Handle the first line height
+		totalHeight += MAX(configuration_->commonHeight_ * lineHeight_ - topHeight, [self bottomDisplayHeight:NO] - topHeight);
+		// Handle the last line height
+		totalHeight += [self bottomDisplayHeight:YES];
+		if (quantityOfLines > 2) {
+			// We have 3 or more lines which means we need to compute the middle lines
+			totalHeight += adjustedLineHeight * (quantityOfLines - 2);
+		}
+	}
+	
+	nextFontPositionY += totalHeight - adjustedLineHeight;
     
 	for(NSUInteger i = 0; i<stringLen; i++) {
 		unichar c = [string_ characterAtIndex:i];
         
 		if (c == '\n') {
 			nextFontPositionX = 0;
-			nextFontPositionY -= configuration_->commonHeight_;
+			nextFontPositionY -= adjustedLineHeight;
 			continue;
 		}
         
@@ -762,10 +865,10 @@ void FNTConfigRemoveCache( void )
 		}
         
 		// See issue 1343. cast( signed short + unsigned integer ) == unsigned integer (sign is lost!)
-		NSInteger yOffset = configuration_->commonHeight_ - fontDef.yOffset;
+		float yOffset = adjustedLineHeight - fontDef.yOffset;
 		CGPoint fontPos = ccp( (CGFloat)nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width*0.5f + kerningAmount,
 							  (CGFloat)nextFontPositionY + yOffset - rect.size.height*0.5f * CC_CONTENT_SCALE_FACTOR() );
-        fontChar.position = CC_POINT_PIXELS_TO_POINTS(fontPos);
+		fontChar.position = CC_POINT_PIXELS_TO_POINTS(fontPos);
 		
 		// update kerning
 		nextFontPositionX += fontDef.xAdvance + kerningAmount;
@@ -878,6 +981,21 @@ void FNTConfigRemoveCache( void )
 - (void)setAlignment:(CCTextAlignment)alignment {
     alignment_ = alignment;
     [self updateLabel];
+}
+
+- (void)setBottomDisplay:(CCLabelBottomDisplay)bottomDisplay {
+	bottomDisplay_ = bottomDisplay;
+  [self updateLabel];
+}
+	
+- (void)setTopDisplay:(CCLabelTopDisplay)topDisplay {
+	topDisplay_ = topDisplay;
+	[self updateLabel];
+}
+
+-(void)setLineHeight:(float)lineHeight {
+  lineHeight_ = MAX(lineHeight, 0);
+  [self updateLabel];
 }
 
 #pragma mark LabelBMFont - FntFile

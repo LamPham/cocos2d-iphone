@@ -48,6 +48,11 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		3B059C5C15AD05EB005775CD /* LabelTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AC093012280BB900EFA814 /* LabelTest.m */; };
+		3B233C6115B1D76500A57CAF /* zapfino-hd.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C5D15B1D76500A57CAF /* zapfino-hd.fnt */; };
+		3B233C6215B1D76500A57CAF /* zapfino-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C5E15B1D76500A57CAF /* zapfino-hd.png */; };
+		3B233C6315B1D76500A57CAF /* zapfino.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C5F15B1D76500A57CAF /* zapfino.fnt */; };
+		3B233C6415B1D76500A57CAF /* zapfino.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C6015B1D76500A57CAF /* zapfino.png */; };
 		4AD3B6FC15991C48002E68D1 /* ThoMoClientStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6EE15991A64002E68D1 /* ThoMoClientStub.m */; };
 		4AD3B6FD15991C48002E68D1 /* ThoMoNetworkStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6F315991A64002E68D1 /* ThoMoNetworkStub.m */; };
 		4AD3B6FE15991C48002E68D1 /* ThoMoServerStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6F615991A64002E68D1 /* ThoMoServerStub.m */; };
@@ -5825,6 +5830,10 @@
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		3B233C5D15B1D76500A57CAF /* zapfino-hd.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zapfino-hd.fnt"; sourceTree = "<group>"; };
+		3B233C5E15B1D76500A57CAF /* zapfino-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zapfino-hd.png"; sourceTree = "<group>"; };
+		3B233C5F15B1D76500A57CAF /* zapfino.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zapfino.fnt; sourceTree = "<group>"; };
+		3B233C6015B1D76500A57CAF /* zapfino.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zapfino.png; sourceTree = "<group>"; };
 		4AD3B6ED15991A64002E68D1 /* ThoMoClientDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThoMoClientDelegateProtocol.h; sourceTree = "<group>"; };
 		4AD3B6EE15991A64002E68D1 /* ThoMoClientStub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThoMoClientStub.m; sourceTree = "<group>"; };
 		4AD3B6EF15991A64002E68D1 /* ThoMoClientStub_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThoMoClientStub_private.h; sourceTree = "<group>"; };
@@ -6369,7 +6378,7 @@
 		E076E6331225EC7400DE0DA2 /* CCActionInstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionInstant.h; sourceTree = "<group>"; };
 		E076E6341225EC7400DE0DA2 /* CCActionInstant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionInstant.m; sourceTree = "<group>"; };
 		E076E6351225EC7400DE0DA2 /* CCActionInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionInterval.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		E076E6361225EC7400DE0DA2 /* CCActionInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionInterval.m; sourceTree = "<group>"; };
+		E076E6361225EC7400DE0DA2 /* CCActionInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionInterval.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E076E6371225EC7400DE0DA2 /* CCActionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionManager.h; sourceTree = "<group>"; };
 		E076E6381225EC7400DE0DA2 /* CCActionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionManager.m; sourceTree = "<group>"; };
 		E076E6391225EC7400DE0DA2 /* CCActionPageTurn3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionPageTurn3D.h; sourceTree = "<group>"; };
@@ -6402,7 +6411,7 @@
 		E076E6581225EC7400DE0DA2 /* CCLabelTTF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLabelTTF.h; sourceTree = "<group>"; };
 		E076E6591225EC7400DE0DA2 /* CCLabelTTF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLabelTTF.m; sourceTree = "<group>"; };
 		E076E65A1225EC7400DE0DA2 /* CCLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLayer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		E076E65B1225EC7400DE0DA2 /* CCLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLayer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		E076E65B1225EC7400DE0DA2 /* CCLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLayer.m; sourceTree = "<group>"; };
 		E076E65C1225EC7400DE0DA2 /* ccMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccMacros.h; sourceTree = "<group>"; };
 		E076E65D1225EC7400DE0DA2 /* CCMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMenu.h; sourceTree = "<group>"; };
 		E076E65E1225EC7400DE0DA2 /* CCMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMenu.m; sourceTree = "<group>"; };
@@ -8524,6 +8533,10 @@
 				E076E7B41225EDD000DE0DA2 /* Scissor Cuts.ttf */,
 				E076E7B51225EDD000DE0DA2 /* tuffy_bold_italic-charmap.png */,
 				A0F83F7E151CAAC900EBBFCB /* tuffy_bold_italic-charmap.plist */,
+				3B233C5D15B1D76500A57CAF /* zapfino-hd.fnt */,
+				3B233C5E15B1D76500A57CAF /* zapfino-hd.png */,
+				3B233C5F15B1D76500A57CAF /* zapfino.fnt */,
+				3B233C6015B1D76500A57CAF /* zapfino.png */,
 			);
 			name = Fonts;
 			path = Resources/Fonts;
@@ -13641,6 +13654,10 @@
 				A0F8420B151D662D00EBBFCB /* font-issue1343-hd.png in Resources */,
 				A0F8420C151D662D00EBBFCB /* font-issue1343.fnt in Resources */,
 				A0F8420D151D662D00EBBFCB /* font-issue1343.png in Resources */,
+				3B233C6115B1D76500A57CAF /* zapfino-hd.fnt in Resources */,
+				3B233C6215B1D76500A57CAF /* zapfino-hd.png in Resources */,
+				3B233C6315B1D76500A57CAF /* zapfino.fnt in Resources */,
+				3B233C6415B1D76500A57CAF /* zapfino.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -14893,6 +14910,7 @@
 				E026450C12A59DA7009D04FE /* main.m in Sources */,
 				E026451E12A59E07009D04FE /* ParticleTest.m in Sources */,
 				A04443EE14A91DB600E62742 /* BaseAppController.m in Sources */,
+				3B059C5C15AD05EB005775CD /* LabelTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
