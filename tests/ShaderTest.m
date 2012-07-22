@@ -794,13 +794,11 @@ enum {
 	if( (self=[super init] ) ) {
 		
 		blurSpriteBatch = [CCSpriteBatchNodeBlur batchNodeWithFile:@"grossini.png"];
-		CCSprite *sprite = [CCSprite spriteWithFile:@"grossini.png"];
 		
 		CGSize s = [[CCDirector sharedDirector] winSize];
 		[self addNewSpriteWithCoords:ccp(s.width/3, s.height/2)];
 		
 		[self addChild:blurSpriteBatch];
-		[blurSpriteBatch addChild:sprite];
 		
 		self.sliderCtl = [self createSliderCtl];
 		
