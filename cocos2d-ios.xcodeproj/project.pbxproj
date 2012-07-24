@@ -35,26 +35,13 @@
 		3B0C2E7615B8FE0D005A6D50 /* r2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5001659A0E72DB0E0085673F /* r2.png */; };
 		3B0C2E7715B8FE0D005A6D50 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B2CB240E10EE4A00AE9530 /* Default.png */; };
 		3B0C2E7815B8FE0D005A6D50 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B2CB250E10EE4A00AE9530 /* Icon.png */; };
-		3B0C2E7915B8FE0D005A6D50 /* grossini.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B2CB280E10EE4A00AE9530 /* grossini.png */; };
-		3B0C2E7A15B8FE0D005A6D50 /* grossinis_sister1.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B2CB290E10EE4A00AE9530 /* grossinis_sister1.png */; };
-		3B0C2E7B15B8FE0D005A6D50 /* grossinis_sister2.png in Resources */ = {isa = PBXBuildFile; fileRef = 50B2CB2A0E10EE4A00AE9530 /* grossinis_sister2.png */; };
-		3B0C2E7C15B8FE0D005A6D50 /* fire.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F9EA8F0E1AE87E000E7616 /* fire.png */; };
-		3B0C2E7D15B8FE0D005A6D50 /* atlastest.png in Resources */ = {isa = PBXBuildFile; fileRef = 506882680E957C4A00F943E5 /* atlastest.png */; };
-		3B0C2E7E15B8FE0D005A6D50 /* grossini_dance_atlas.png in Resources */ = {isa = PBXBuildFile; fileRef = 509A7A970F61A2400032F449 /* grossini_dance_atlas.png */; };
-		3B0C2E7F15B8FE0D005A6D50 /* fire.pvr in Resources */ = {isa = PBXBuildFile; fileRef = 502AACF20F79715D001E3F87 /* fire.pvr */; };
-		3B0C2E8015B8FE0D005A6D50 /* grossini_dance_atlas-mono.png in Resources */ = {isa = PBXBuildFile; fileRef = 5012DA180FE109C100D6DDD1 /* grossini_dance_atlas-mono.png */; };
 		3B0C2E8115B8FE0D005A6D50 /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = 505464301062886600AB7C52 /* fps_images.png */; };
-		3B0C2E8215B8FE0D005A6D50 /* animations in Resources */ = {isa = PBXBuildFile; fileRef = 502C8C9810A701D300D137BA /* animations */; };
 		3B0C2E8315B8FE0D005A6D50 /* f1-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E04C632012382F6100A4B3E6 /* f1-hd.png */; };
 		3B0C2E8415B8FE0D005A6D50 /* f2-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E04C632112382F6100A4B3E6 /* f2-hd.png */; };
 		3B0C2E8515B8FE0D005A6D50 /* r1-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E04C632212382F6100A4B3E6 /* r1-hd.png */; };
 		3B0C2E8615B8FE0D005A6D50 /* r2-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E04C632312382F6100A4B3E6 /* r2-hd.png */; };
 		3B0C2E8715B8FE0D005A6D50 /* b1-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E04C640412382F9300A4B3E6 /* b1-hd.png */; };
 		3B0C2E8815B8FE0D005A6D50 /* b2-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E04C640512382F9300A4B3E6 /* b2-hd.png */; };
-		3B0C2E8915B8FE0D005A6D50 /* grossini_dance_atlas-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E062F9961247FC5400DE3932 /* grossini_dance_atlas-hd.png */; };
-		3B0C2E8A15B8FE0D005A6D50 /* grossini-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E062F9BA124801A300DE3932 /* grossini-hd.png */; };
-		3B0C2E8B15B8FE0D005A6D50 /* grossinis_sister1-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E062F9BB124801A300DE3932 /* grossinis_sister1-hd.png */; };
-		3B0C2E8C15B8FE0D005A6D50 /* grossinis_sister2-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E062F9BC124801A300DE3932 /* grossinis_sister2-hd.png */; };
 		3B0C2E8D15B8FE0D005A6D50 /* iTunesArtwork in Resources */ = {isa = PBXBuildFile; fileRef = E02BB57D126CA73F006E46A2 /* iTunesArtwork */; };
 		3B0C2E8E15B8FE0D005A6D50 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E02BB57E126CA73F006E46A2 /* Icon@2x.png */; };
 		3B0C2E8F15B8FE0D005A6D50 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E02BB57F126CA73F006E46A2 /* Icon-Small@2x.png */; };
@@ -69,20 +56,6 @@
 		3B0C2E9815B8FE0D005A6D50 /* f2-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A0B0377013EA1FDB0073E59A /* f2-ipad.png */; };
 		3B0C2E9915B8FE0D005A6D50 /* r1-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A0B0377113EA1FDB0073E59A /* r1-ipad.png */; };
 		3B0C2E9A15B8FE0D005A6D50 /* r2-ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = A0B0377213EA1FDB0073E59A /* r2-ipad.png */; };
-		3B0C2E9B15B8FE0D005A6D50 /* grossini_dance_01.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A331E0FBADD5F00D574A2 /* grossini_dance_01.png */; };
-		3B0C2E9C15B8FE0D005A6D50 /* grossini_dance_02.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A331F0FBADD5F00D574A2 /* grossini_dance_02.png */; };
-		3B0C2E9D15B8FE0D005A6D50 /* grossini_dance_03.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33200FBADD5F00D574A2 /* grossini_dance_03.png */; };
-		3B0C2E9E15B8FE0D005A6D50 /* grossini_dance_04.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33210FBADD5F00D574A2 /* grossini_dance_04.png */; };
-		3B0C2E9F15B8FE0D005A6D50 /* grossini_dance_05.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33220FBADD5F00D574A2 /* grossini_dance_05.png */; };
-		3B0C2EA015B8FE0D005A6D50 /* grossini_dance_06.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33230FBADD5F00D574A2 /* grossini_dance_06.png */; };
-		3B0C2EA115B8FE0D005A6D50 /* grossini_dance_07.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33240FBADD5F00D574A2 /* grossini_dance_07.png */; };
-		3B0C2EA215B8FE0D005A6D50 /* grossini_dance_08.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33250FBADD5F00D574A2 /* grossini_dance_08.png */; };
-		3B0C2EA315B8FE0D005A6D50 /* grossini_dance_09.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33260FBADD5F00D574A2 /* grossini_dance_09.png */; };
-		3B0C2EA415B8FE0D005A6D50 /* grossini_dance_10.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33270FBADD5F00D574A2 /* grossini_dance_10.png */; };
-		3B0C2EA515B8FE0D005A6D50 /* grossini_dance_11.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33280FBADD5F00D574A2 /* grossini_dance_11.png */; };
-		3B0C2EA615B8FE0D005A6D50 /* grossini_dance_12.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A33290FBADD5F00D574A2 /* grossini_dance_12.png */; };
-		3B0C2EA715B8FE0D005A6D50 /* grossini_dance_13.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A332A0FBADD5F00D574A2 /* grossini_dance_13.png */; };
-		3B0C2EA815B8FE0D005A6D50 /* grossini_dance_14.png in Resources */ = {isa = PBXBuildFile; fileRef = 508A332B0FBADD5F00D574A2 /* grossini_dance_14.png */; };
 		3B0C2EA915B8FE0D005A6D50 /* fps_images-ipadhd.png in Resources */ = {isa = PBXBuildFile; fileRef = A093FC24150D0ED40039327A /* fps_images-ipadhd.png */; };
 		3B0C2EAB15B8FE0D005A6D50 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B2CB170E10EE0800AE9530 /* main.m */; };
 		3B0C2EAD15B8FE0D005A6D50 /* BaseAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0D3A8FE149D2FA40077CD93 /* BaseAppController.m */; };
@@ -9763,26 +9736,13 @@
 				3B0C2E7615B8FE0D005A6D50 /* r2.png in Resources */,
 				3B0C2E7715B8FE0D005A6D50 /* Default.png in Resources */,
 				3B0C2E7815B8FE0D005A6D50 /* Icon.png in Resources */,
-				3B0C2E7915B8FE0D005A6D50 /* grossini.png in Resources */,
-				3B0C2E7A15B8FE0D005A6D50 /* grossinis_sister1.png in Resources */,
-				3B0C2E7B15B8FE0D005A6D50 /* grossinis_sister2.png in Resources */,
-				3B0C2E7C15B8FE0D005A6D50 /* fire.png in Resources */,
-				3B0C2E7D15B8FE0D005A6D50 /* atlastest.png in Resources */,
-				3B0C2E7E15B8FE0D005A6D50 /* grossini_dance_atlas.png in Resources */,
-				3B0C2E7F15B8FE0D005A6D50 /* fire.pvr in Resources */,
-				3B0C2E8015B8FE0D005A6D50 /* grossini_dance_atlas-mono.png in Resources */,
 				3B0C2E8115B8FE0D005A6D50 /* fps_images.png in Resources */,
-				3B0C2E8215B8FE0D005A6D50 /* animations in Resources */,
 				3B0C2E8315B8FE0D005A6D50 /* f1-hd.png in Resources */,
 				3B0C2E8415B8FE0D005A6D50 /* f2-hd.png in Resources */,
 				3B0C2E8515B8FE0D005A6D50 /* r1-hd.png in Resources */,
 				3B0C2E8615B8FE0D005A6D50 /* r2-hd.png in Resources */,
 				3B0C2E8715B8FE0D005A6D50 /* b1-hd.png in Resources */,
 				3B0C2E8815B8FE0D005A6D50 /* b2-hd.png in Resources */,
-				3B0C2E8915B8FE0D005A6D50 /* grossini_dance_atlas-hd.png in Resources */,
-				3B0C2E8A15B8FE0D005A6D50 /* grossini-hd.png in Resources */,
-				3B0C2E8B15B8FE0D005A6D50 /* grossinis_sister1-hd.png in Resources */,
-				3B0C2E8C15B8FE0D005A6D50 /* grossinis_sister2-hd.png in Resources */,
 				3B0C2E8D15B8FE0D005A6D50 /* iTunesArtwork in Resources */,
 				3B0C2E8E15B8FE0D005A6D50 /* Icon@2x.png in Resources */,
 				3B0C2E8F15B8FE0D005A6D50 /* Icon-Small@2x.png in Resources */,
@@ -9797,20 +9757,6 @@
 				3B0C2E9815B8FE0D005A6D50 /* f2-ipad.png in Resources */,
 				3B0C2E9915B8FE0D005A6D50 /* r1-ipad.png in Resources */,
 				3B0C2E9A15B8FE0D005A6D50 /* r2-ipad.png in Resources */,
-				3B0C2E9B15B8FE0D005A6D50 /* grossini_dance_01.png in Resources */,
-				3B0C2E9C15B8FE0D005A6D50 /* grossini_dance_02.png in Resources */,
-				3B0C2E9D15B8FE0D005A6D50 /* grossini_dance_03.png in Resources */,
-				3B0C2E9E15B8FE0D005A6D50 /* grossini_dance_04.png in Resources */,
-				3B0C2E9F15B8FE0D005A6D50 /* grossini_dance_05.png in Resources */,
-				3B0C2EA015B8FE0D005A6D50 /* grossini_dance_06.png in Resources */,
-				3B0C2EA115B8FE0D005A6D50 /* grossini_dance_07.png in Resources */,
-				3B0C2EA215B8FE0D005A6D50 /* grossini_dance_08.png in Resources */,
-				3B0C2EA315B8FE0D005A6D50 /* grossini_dance_09.png in Resources */,
-				3B0C2EA415B8FE0D005A6D50 /* grossini_dance_10.png in Resources */,
-				3B0C2EA515B8FE0D005A6D50 /* grossini_dance_11.png in Resources */,
-				3B0C2EA615B8FE0D005A6D50 /* grossini_dance_12.png in Resources */,
-				3B0C2EA715B8FE0D005A6D50 /* grossini_dance_13.png in Resources */,
-				3B0C2EA815B8FE0D005A6D50 /* grossini_dance_14.png in Resources */,
 				3B0C2EA915B8FE0D005A6D50 /* fps_images-ipadhd.png in Resources */,
 				3B0C2EC615B9044C005A6D50 /* lam-experimental in Resources */,
 			);

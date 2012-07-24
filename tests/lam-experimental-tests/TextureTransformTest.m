@@ -138,7 +138,7 @@ Class restartAction()
 		
 		// ask director the the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
-		ttexture_ = [CCTransformTexture spriteWithFile:@"lam-experimental/bg.png"];
+		ttexture_ = [CCTransformTexture spriteWithFile:@"lam-experimental/bg-565.png"];
 		
 		// position the label on the center of the screen
 		ttexture_.position =  ccp( size.width /2 , size.height/2 );
@@ -167,7 +167,7 @@ Class restartAction()
 		
 		// ask director the the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
-		ttexture_ = [CCTransformTexture spriteWithFile:@"lam-experimental/bg.png"];
+		ttexture_ = [CCTransformTexture spriteWithFile:@"lam-experimental/bg-565.png"];
 		
 		// position the label on the center of the screen
 		ttexture_.position =  ccp( size.width /2 , size.height/2 );
@@ -197,7 +197,7 @@ Class restartAction()
 		
 		// ask director the the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
-		ttexture_ = [CCTransformTexture spriteWithFile:@"lam-experimental/bg.png"];
+		ttexture_ = [CCTransformTexture spriteWithFile:@"lam-experimental/bg-565.png"];
 		
 		// position the label on the center of the screen
 		ttexture_.position =  ccp( size.width /2 , size.height/2 );
