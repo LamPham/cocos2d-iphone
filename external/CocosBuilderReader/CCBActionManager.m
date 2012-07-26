@@ -297,7 +297,7 @@
     [self setFirstFrameForNode:node sequenceProperty:seqProp tweenDuration:tweenDuration];
     
     NSArray* keyframes = [seqProp keyframes];
-    int numKeyframes = keyframes.count;
+    NSUInteger numKeyframes = keyframes.count;
     
     if (numKeyframes > 1)
     {
@@ -334,7 +334,7 @@
 
 - (void) runActionsForSequenceId:(int)seqId tweenDuration:(float) tweenDuration
 {
-    NSAssert(seqId != -1, @"Sequence named %@ couldn't be found");
+    NSAssert(seqId != -1, @"Sequence named %d couldn't be found", seqId);
     
     for (NSValue* nodePtr in nodeSequences)
     {

@@ -8,7 +8,6 @@
 #import "js_bindings_CocosBuilderReader_classes.h"
 #import "js_manual_conversions.h"
 
-
 @interface CCBReaderForwarder : NSObject
 {
 	JSObject *_jsthis;
@@ -73,7 +72,7 @@
 // Arguments: NSString*, NSObject*
 // Ret value: CCNode* (o)
 JSBool JSPROXY_CCBReader_nodeGraphFromFile_owner_parentSize__static(JSContext *cx, uint32_t argc, jsval *vp) {
-	JSB_PRECONDITION( argc >= 1 && argc<=3 , @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc >= 1 && argc<=3 , "Invalid number of arguments" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
 	NSString* arg0; JSObject *arg1; CGSize arg2;
@@ -116,7 +115,7 @@ JSBool JSPROXY_CCBReader_nodeGraphFromFile_owner_parentSize__static(JSContext *c
 // Arguments: NSString*, NSObject*, CGSize
 // Ret value: CCScene* (o)
 JSBool JSPROXY_CCBReader_sceneWithNodeGraphFromFile_owner_parentSize__static(JSContext *cx, uint32_t argc, jsval *vp) {
-	JSB_PRECONDITION( argc >= 1 && argc<=3 , @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc >= 1 && argc<=3 , "Invalid number of arguments" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
 	NSString* arg0; JSObject *arg1; CGSize arg2;

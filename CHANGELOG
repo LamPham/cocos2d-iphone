@@ -1,14 +1,18 @@
 version 2.1-alpha XX-Ago-2012
+. [NEW] DrawNode: Node that batches drawing primitives (replaces the drawing primitives free functions )
 . [NEW] FileUtils: Added support for mac and retinaDisplay Mac suffix.
 . [NEW] GL ES 2.0 code: General improvements in the shader and cache code. Better error reporting.
 . [NEW] Javascript bindings for cocos2d, CocosDenshion, CocosBuilder Reader and Chipmunk.
 			Includes Javascript remote console
 			Removed old JSCocoa code and samples
+			Uses Spidermonkey JS VM from Firefox 14.0.1
 . [NEW] Node: Added RotationalSkew featur (compatible with Flash)
 . [NEW] Tests: Tests for RotationalSkew feature
+. [FIX] Node & BatchNode: RENDER_IN_SUBPIXEL works as expected.
 . [FIX] LabelBMFont: removed forward declarations for tFontDefHashElement and tKerningHashElement. They are in the header now.
 			Don't assert if character is not found. Just continue with logging the warning.
 . [FIX] LabelTTF: loads custom fonts correctly on Mac
+. [FIX] ProgressTimer: reverseDirection properly releases vertex if needed.
 
 version 2.0.0 8-Jul-2012
 . [FIX] EventDispatcher: fixed ccMouseEnter/Exit
