@@ -200,7 +200,7 @@ void FNTConfigRemoveCache( void )
 			
 			element->key = element->fontDef.charID;
 			HASH_ADD_INT(fontDefDictionary_, key, element);
-			float nextAscender =  element->fontDef.rect.size.height - element->fontDef.yOffset;
+			float nextAscender =  commonHeight_ - element->fontDef.yOffset;
 			if (ascenderHeight_ < nextAscender) {
 				ascenderHeight_ = nextAscender;
 			}
@@ -208,7 +208,7 @@ void FNTConfigRemoveCache( void )
 			//  Now we determine the cap height, I chose H,I,T to determine the cap height.
 			//	Not sure if there's an easier way but those are Flat on top and capitalized
 			if (element->fontDef.charID == 'H' || element->fontDef.charID == 'I' || element->fontDef.charID == 'T') {
-				capHeight_ = MAX(capHeight_, element->fontDef.rect.size.height - element->fontDef.yOffset);
+				capHeight_ = MAX(capHeight_, commonHeight_ - element->fontDef.yOffset);
 			}
 		}
         //		else if([line hasPrefix:@"kernings count"]) {
@@ -228,7 +228,7 @@ void FNTConfigRemoveCache( void )
   unsigned int key = 'x';
   HASH_FIND_INT(fontDefDictionary_ , &key, element);
   if (element) {
-    xHeight_ = element->fontDef.rect.size.height - element->fontDef.yOffset;
+    xHeight_ = commonHeight_ - element->fontDef.yOffset;
   }
   
 	return  YES;
@@ -816,6 +816,8 @@ void FNTConfigRemoveCache( void )
 	}
 	
 	nextFontPositionY += totalHeight - adjustedLineHeight;
+	
+	short lineOffset = 0;
     
 	for(NSUInteger i = 0; i<stringLen; i++) {
 		unichar c = [string_ characterAtIndex:i];
@@ -823,6 +825,7 @@ void FNTConfigRemoveCache( void )
 		if (c == '\n') {
 			nextFontPositionX = 0;
 			nextFontPositionY -= adjustedLineHeight;
+			prev = -1;
 			continue;
 		}
         
@@ -837,6 +840,11 @@ void FNTConfigRemoveCache( void )
 		NSAssert(element, @"FontDefinition could not be found!");
         
 		ccBMFontDef fontDef = element->fontDef;
+		
+		if (nextFontPositionX == 0) {
+			// Testing if removing the xOffset of the first character helps with horizontal alignment
+			lineOffset = -(fontDef.xOffset);
+		}
         
 		CGRect rect = fontDef.rect;
 		rect = CC_RECT_PIXELS_TO_POINTS(rect);
@@ -863,7 +871,7 @@ void FNTConfigRemoveCache( void )
         
 		// See issue 1343. cast( signed short + unsigned integer ) == unsigned integer (sign is lost!)
 		float yOffset = adjustedLineHeight - fontDef.yOffset;
-		CGPoint fontPos = ccp( (CGFloat)nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width*0.5f + kerningAmount,
+		CGPoint fontPos = ccp( (CGFloat)nextFontPositionX + fontDef.xOffset + lineOffset + fontDef.rect.size.width*0.5f + kerningAmount,
 							  (CGFloat)nextFontPositionY + yOffset - rect.size.height*0.5f * CC_CONTENT_SCALE_FACTOR() );
 		fontChar.position = CC_POINT_PIXELS_TO_POINTS(fontPos);
 		

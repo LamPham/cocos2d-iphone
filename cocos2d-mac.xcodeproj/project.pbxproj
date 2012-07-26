@@ -50,10 +50,10 @@
 
 /* Begin PBXBuildFile section */
 		3B059C5C15AD05EB005775CD /* LabelTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E0AC093012280BB900EFA814 /* LabelTest.m */; };
-		3B233C6115B1D76500A57CAF /* zapfino-hd.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C5D15B1D76500A57CAF /* zapfino-hd.fnt */; };
-		3B233C6215B1D76500A57CAF /* zapfino-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C5E15B1D76500A57CAF /* zapfino-hd.png */; };
-		3B233C6315B1D76500A57CAF /* zapfino.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C5F15B1D76500A57CAF /* zapfino.fnt */; };
-		3B233C6415B1D76500A57CAF /* zapfino.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B233C6015B1D76500A57CAF /* zapfino.png */; };
+		3BAC365415C1D5E200D10316 /* zapfino-16-bmGlyph.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC365015C1D5E100D10316 /* zapfino-16-bmGlyph.png */; };
+		3BAC365515C1D5E200D10316 /* zapfino-16-glyphDesigner.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC365115C1D5E100D10316 /* zapfino-16-glyphDesigner.fnt */; };
+		3BAC365615C1D5E200D10316 /* zapfino-16-bmGlyph.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC365215C1D5E100D10316 /* zapfino-16-bmGlyph.fnt */; };
+		3BAC365715C1D5E200D10316 /* zapfino-16-glyphDesigner.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC365315C1D5E100D10316 /* zapfino-16-glyphDesigner.png */; };
 		4AD3B6FC15991C48002E68D1 /* ThoMoClientStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6EE15991A64002E68D1 /* ThoMoClientStub.m */; };
 		4AD3B6FD15991C48002E68D1 /* ThoMoNetworkStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6F315991A64002E68D1 /* ThoMoNetworkStub.m */; };
 		4AD3B6FE15991C48002E68D1 /* ThoMoServerStub.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AD3B6F615991A64002E68D1 /* ThoMoServerStub.m */; };
@@ -5903,10 +5903,10 @@
 		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		3B233C5D15B1D76500A57CAF /* zapfino-hd.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zapfino-hd.fnt"; sourceTree = "<group>"; };
-		3B233C5E15B1D76500A57CAF /* zapfino-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zapfino-hd.png"; sourceTree = "<group>"; };
-		3B233C5F15B1D76500A57CAF /* zapfino.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zapfino.fnt; sourceTree = "<group>"; };
-		3B233C6015B1D76500A57CAF /* zapfino.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zapfino.png; sourceTree = "<group>"; };
+		3BAC365015C1D5E100D10316 /* zapfino-16-bmGlyph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zapfino-16-bmGlyph.png"; sourceTree = "<group>"; };
+		3BAC365115C1D5E100D10316 /* zapfino-16-glyphDesigner.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zapfino-16-glyphDesigner.fnt"; sourceTree = "<group>"; };
+		3BAC365215C1D5E100D10316 /* zapfino-16-bmGlyph.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zapfino-16-bmGlyph.fnt"; sourceTree = "<group>"; };
+		3BAC365315C1D5E100D10316 /* zapfino-16-glyphDesigner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zapfino-16-glyphDesigner.png"; sourceTree = "<group>"; };
 		4AD3B6ED15991A64002E68D1 /* ThoMoClientDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThoMoClientDelegateProtocol.h; sourceTree = "<group>"; };
 		4AD3B6EE15991A64002E68D1 /* ThoMoClientStub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThoMoClientStub.m; sourceTree = "<group>"; };
 		4AD3B6EF15991A64002E68D1 /* ThoMoClientStub_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThoMoClientStub_private.h; sourceTree = "<group>"; };
@@ -8503,10 +8503,10 @@
 				E076E7B41225EDD000DE0DA2 /* Scissor Cuts.ttf */,
 				E076E7B51225EDD000DE0DA2 /* tuffy_bold_italic-charmap.png */,
 				A0F83F7E151CAAC900EBBFCB /* tuffy_bold_italic-charmap.plist */,
-				3B233C5D15B1D76500A57CAF /* zapfino-hd.fnt */,
-				3B233C5E15B1D76500A57CAF /* zapfino-hd.png */,
-				3B233C5F15B1D76500A57CAF /* zapfino.fnt */,
-				3B233C6015B1D76500A57CAF /* zapfino.png */,
+				3BAC365015C1D5E100D10316 /* zapfino-16-bmGlyph.png */,
+				3BAC365115C1D5E100D10316 /* zapfino-16-glyphDesigner.fnt */,
+				3BAC365215C1D5E100D10316 /* zapfino-16-bmGlyph.fnt */,
+				3BAC365315C1D5E100D10316 /* zapfino-16-glyphDesigner.png */,
 			);
 			name = Fonts;
 			path = Resources/Fonts;
@@ -13676,10 +13676,10 @@
 				A0F8420B151D662D00EBBFCB /* font-issue1343-hd.png in Resources */,
 				A0F8420C151D662D00EBBFCB /* font-issue1343.fnt in Resources */,
 				A0F8420D151D662D00EBBFCB /* font-issue1343.png in Resources */,
-				3B233C6115B1D76500A57CAF /* zapfino-hd.fnt in Resources */,
-				3B233C6215B1D76500A57CAF /* zapfino-hd.png in Resources */,
-				3B233C6315B1D76500A57CAF /* zapfino.fnt in Resources */,
-				3B233C6415B1D76500A57CAF /* zapfino.png in Resources */,
+				3BAC365415C1D5E200D10316 /* zapfino-16-bmGlyph.png in Resources */,
+				3BAC365515C1D5E200D10316 /* zapfino-16-glyphDesigner.fnt in Resources */,
+				3BAC365615C1D5E200D10316 /* zapfino-16-bmGlyph.fnt in Resources */,
+				3BAC365715C1D5E200D10316 /* zapfino-16-glyphDesigner.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

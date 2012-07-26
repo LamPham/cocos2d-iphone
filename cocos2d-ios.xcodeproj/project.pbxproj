@@ -23,10 +23,10 @@
 		05CA7AFE10ED674700F12774 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D500B990D5A79CF00DBA0E3 /* QuartzCore.framework */; };
 		05CA7B0010ED674700F12774 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 503092B210447296005F7AFC /* libz.dylib */; };
 		05CA7B0C10ED67CE00F12774 /* ActionsWithBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 05CA7B0B10ED67CE00F12774 /* ActionsWithBlocks.m */; };
-		3B059C5715AD01D9005775CD /* zapfino-hd.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3B059C5315AD01D4005775CD /* zapfino-hd.fnt */; };
-		3B059C5815AD01D9005775CD /* zapfino-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B059C5415AD01D5005775CD /* zapfino-hd.png */; };
-		3B059C5915AD01D9005775CD /* zapfino.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3B059C5515AD01D7005775CD /* zapfino.fnt */; };
-		3B059C5A15AD01D9005775CD /* zapfino.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B059C5615AD01D8005775CD /* zapfino.png */; };
+		3BAC35E415C1CAA500D10316 /* zapfino-16-bmGlyph.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC35E015C1CAA400D10316 /* zapfino-16-bmGlyph.png */; };
+		3BAC35E515C1CAA500D10316 /* zapfino-16-glyphDesigner.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC35E115C1CAA400D10316 /* zapfino-16-glyphDesigner.fnt */; };
+		3BAC35E615C1CAA500D10316 /* zapfino-16-bmGlyph.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC35E215C1CAA400D10316 /* zapfino-16-bmGlyph.fnt */; };
+		3BAC35E715C1CAA500D10316 /* zapfino-16-glyphDesigner.png in Resources */ = {isa = PBXBuildFile; fileRef = 3BAC35E315C1CAA400D10316 /* zapfino-16-glyphDesigner.png */; };
 		3BB41AD414E43A51006CD0D8 /* zwoptex in Resources */ = {isa = PBXBuildFile; fileRef = E0C5588E11FE4CF100B9E4CB /* zwoptex */; };
 		3BB5C8E911410A4000DD65EF /* blocks.png in Resources */ = {isa = PBXBuildFile; fileRef = AAEA834A0FD5704400F08728 /* blocks.png */; };
 		3BB5C8EF11410A5300DD65EF /* blocks.png in Resources */ = {isa = PBXBuildFile; fileRef = AAEA834A0FD5704400F08728 /* blocks.png */; };
@@ -3856,10 +3856,10 @@
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2D500B920D5A79C200DBA0E3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		2D500B990D5A79CF00DBA0E3 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		3B059C5315AD01D4005775CD /* zapfino-hd.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zapfino-hd.fnt"; sourceTree = "<group>"; };
-		3B059C5415AD01D5005775CD /* zapfino-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zapfino-hd.png"; sourceTree = "<group>"; };
-		3B059C5515AD01D7005775CD /* zapfino.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = zapfino.fnt; sourceTree = "<group>"; };
-		3B059C5615AD01D8005775CD /* zapfino.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zapfino.png; sourceTree = "<group>"; };
+		3BAC35E015C1CAA400D10316 /* zapfino-16-bmGlyph.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zapfino-16-bmGlyph.png"; sourceTree = "<group>"; };
+		3BAC35E115C1CAA400D10316 /* zapfino-16-glyphDesigner.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zapfino-16-glyphDesigner.fnt"; sourceTree = "<group>"; };
+		3BAC35E215C1CAA400D10316 /* zapfino-16-bmGlyph.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "zapfino-16-bmGlyph.fnt"; sourceTree = "<group>"; };
+		3BAC35E315C1CAA400D10316 /* zapfino-16-glyphDesigner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zapfino-16-glyphDesigner.png"; sourceTree = "<group>"; };
 		495E73F7104B74E20012BB52 /* RenderTextureTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RenderTextureTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		495E74F6104B756D0012BB52 /* RenderTextureTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderTextureTest.h; path = tests/RenderTextureTest.h; sourceTree = "<group>"; };
 		495E74F7104B756D0012BB52 /* RenderTextureTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RenderTextureTest.m; path = tests/RenderTextureTest.m; sourceTree = "<group>"; };
@@ -6474,10 +6474,10 @@
 				5054639E1062867800AB7C52 /* bitmapFontTest4.png */,
 				5054639F1062867800AB7C52 /* bitmapFontTest5.fnt */,
 				505463A01062867800AB7C52 /* bitmapFontTest5.png */,
-				3B059C5315AD01D4005775CD /* zapfino-hd.fnt */,
-				3B059C5415AD01D5005775CD /* zapfino-hd.png */,
-				3B059C5515AD01D7005775CD /* zapfino.fnt */,
-				3B059C5615AD01D8005775CD /* zapfino.png */,
+				3BAC35E015C1CAA400D10316 /* zapfino-16-bmGlyph.png */,
+				3BAC35E115C1CAA400D10316 /* zapfino-16-glyphDesigner.fnt */,
+				3BAC35E215C1CAA400D10316 /* zapfino-16-bmGlyph.fnt */,
+				3BAC35E315C1CAA400D10316 /* zapfino-16-glyphDesigner.png */,
 			);
 			name = "BMFont fonts";
 			sourceTree = "<group>";
@@ -10406,10 +10406,10 @@
 				A0F841F6151D5E4700EBBFCB /* font-issue1343-hd.png in Resources */,
 				A0F841F7151D5E4700EBBFCB /* font-issue1343.fnt in Resources */,
 				A0F841F8151D5E4700EBBFCB /* font-issue1343.png in Resources */,
-				3B059C5715AD01D9005775CD /* zapfino-hd.fnt in Resources */,
-				3B059C5815AD01D9005775CD /* zapfino-hd.png in Resources */,
-				3B059C5915AD01D9005775CD /* zapfino.fnt in Resources */,
-				3B059C5A15AD01D9005775CD /* zapfino.png in Resources */,
+				3BAC35E415C1CAA500D10316 /* zapfino-16-bmGlyph.png in Resources */,
+				3BAC35E515C1CAA500D10316 /* zapfino-16-glyphDesigner.fnt in Resources */,
+				3BAC35E615C1CAA500D10316 /* zapfino-16-bmGlyph.fnt in Resources */,
+				3BAC35E715C1CAA500D10316 /* zapfino-16-glyphDesigner.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

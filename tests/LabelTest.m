@@ -1787,14 +1787,6 @@ static float menuItemPaddingCenter = 50;
 #pragma mark -
 #pragma mark BitmapFontLineheightAdjustment
 
-#define DisplayBottomLineHeight 0
-#define DisplayBottomDescender 1
-#define DisplayBottomBaseline 2
-
-#define DisplayTopAscender 3
-#define DisplayTopCapHeight 4
-#define DisplayTopXHeight 5
-
 /**
  *	CCLabelBMFontDebug enables the contentSize outline otherwise it would be pretty
  *	hard to understand how the new bottomDisplay and topDisplayProperties work.
@@ -1817,8 +1809,6 @@ static float menuItemPaddingCenter = 50;
 @end
 
 @implementation BitmapFontLineheightAdjustment
-
-@synthesize label = label_;
 @synthesize arrowsBar = arrowsBar_;
 @synthesize arrows = arrows_;
 
@@ -1835,47 +1825,69 @@ static float menuItemPaddingCenter = 50;
 		self.isMouseEnabled = YES;
 #endif
     
+    self.arrowsBar = [CCSprite spriteWithFile:@"arrowsBar.png"];
+    self.arrows = [CCSprite spriteWithFile:@"arrows.png"];
+    [self.arrows setRotation:90];
+		
 		// ask director the the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
     
 		// create and initialize a Label, we created a subclass just for this test to enable
 		// debug drawing
-		self.label = [CCLabelBMFontDebug labelWithString:LongSentencesExample fntFile:@"konqa32.fnt" width:size.width/1.5 alignment:kCCTextAlignmentCenter];
-    //self.label.debug = YES;
+		labels_[kBMLabel_bmGlyph] = [[CCLabelBMFontDebug labelWithString:LongSentencesExample @"\n-bmGlyph" fntFile:@"zapfino-16-bmGlyph.fnt" width:(size.width-arrowsBar_.contentSize.width)/2 alignment:kCCTextAlignmentLeft] retain];
+		labels_[kBMLabel_glyphDesigner] = [[CCLabelBMFontDebug labelWithString:LongSentencesExample@"\n-glyphDesigner" fntFile:@"zapfino-16-glyphDesigner.fnt" width:(size.width-arrowsBar_.contentSize.width)/2 alignment:kCCTextAlignmentLeft] retain];
     
-    self.arrowsBar = [CCSprite spriteWithFile:@"arrowsBar.png"];
-    self.arrows = [CCSprite spriteWithFile:@"arrows.png"];
-    [self.arrows setRotation:90];
 		
     [CCMenuItemFont setFontSize:12];
 		
-    CCMenuItemFont *ascender = [CCMenuItemFont itemWithString:@"Ascender" target:self selector:@selector(displayChanged:)];
-    CCMenuItemFont *capHeight = [CCMenuItemFont itemWithString:@"CapHeight" target:self selector:@selector(displayChanged:)];
-    CCMenuItemFont *xHeight = [CCMenuItemFont itemWithString:@"XHeight" target:self selector:@selector(displayChanged:)];
+    CCMenuItemFont *ascender = [CCMenuItemFont itemWithString:@"Ascender" block:^(id sender){
+			for (int i = 0; i < kBMLabel_count; i++)
+				[labels_[i] setTopDisplay:kCCLabelTopDisplayAscender];
+			[self snapArrowsToEdge];
+		}];
+    CCMenuItemFont *capHeight = [CCMenuItemFont itemWithString:@"CapHeight" block:^(id sender){
+			for (int i = 0; i < kBMLabel_count; i++)
+				[labels_[i] setTopDisplay:kCCLabelTopDisplayCapHeight];
+			[self snapArrowsToEdge];
+		}];
+    CCMenuItemFont *xHeight = [CCMenuItemFont itemWithString:@"XHeight" block:^(id sender){
+			for (int i = 0; i < kBMLabel_count; i++)
+				[labels_[i] setTopDisplay:kCCLabelTopDisplayXHeight];
+			[self snapArrowsToEdge];
+		}];
     CCMenu *topDisplayMenu = [CCMenu menuWithItems:ascender,capHeight,xHeight, nil];
     [topDisplayMenu alignItemsHorizontallyWithPadding:20];
     
-    CCMenuItemFont *lineHeight = [CCMenuItemFont itemWithString:@"LineHeight" target:self selector:@selector(displayChanged:)];
-    CCMenuItemFont *descender = [CCMenuItemFont itemWithString:@"Descender" target:self selector:@selector(displayChanged:)];
-    CCMenuItemFont *baseline = [CCMenuItemFont itemWithString:@"Baseline" target:self selector:@selector(displayChanged:)];
+    CCMenuItemFont *lineHeight = [CCMenuItemFont itemWithString:@"LineHeight" block:^(id sender){
+			for (int i = 0; i < kBMLabel_count; i++)
+				[labels_[i] setBottomDisplay:kCCLabelBottomDisplayLineHeight];
+			[self snapArrowsToEdge];
+		}];
+    CCMenuItemFont *descender = [CCMenuItemFont itemWithString:@"Descender" block:^(id sender){
+			for (int i = 0; i < kBMLabel_count; i++)
+				[labels_[i] setBottomDisplay:kCCLabelBottomDisplayDescender];
+			[self snapArrowsToEdge];
+		}];
+    CCMenuItemFont *baseline = [CCMenuItemFont itemWithString:@"Baseline" block:^(id sender){
+			for (int i = 0; i < kBMLabel_count; i++)
+				[labels_[i] setBottomDisplay:kCCLabelBottomDisplayBaseline];
+			[self snapArrowsToEdge];
+		}];
     CCMenu *bottomDisplayMenu = [CCMenu menuWithItems:lineHeight, descender, baseline, nil];
     [bottomDisplayMenu alignItemsHorizontallyWithPadding:20];
     
-    lineHeight.tag = DisplayBottomLineHeight;
-    descender.tag = DisplayBottomDescender;
-    baseline.tag = DisplayBottomBaseline;
-    ascender.tag = DisplayTopAscender;
-    capHeight.tag = DisplayTopCapHeight;
-    xHeight.tag = DisplayTopXHeight;
-    
 		// position the label on the center of the screen
-		self.label.position =  ccp( size.width/2 , size.height/2 );
+		float nextX = 0;
+		for (int i = 0; i < kBMLabel_count; i++) {
+			labels_[i].position = ccp((labels_[i].contentSize.width/2) + nextX + 2 , size.height/2 );
+			nextX += labels_[i].contentSize.width + 2;
+		}
     
     self.arrowsBar.visible = NO;
     
     float arrowsHeight =  size.height / 3;
     self.arrowsBar.scaleY = arrowsHeight / self.arrowsBar.contentSize.height;
-    self.arrowsBar.position = ccp(0.9 * size.width, size.height/2);
+    self.arrowsBar.position = ccp(size.width - self.arrowsBar.contentSize.width/2, size.height/2);
     self.arrows.position = self.arrowsBar.position;
     
     [self snapArrowsToEdge];
@@ -1889,7 +1901,10 @@ static float menuItemPaddingCenter = 50;
 #endif
     
 		// add the label as a child to this Layer
-		[self addChild:self.label];
+		
+		for (int i = 0; i < kBMLabel_count; i++) {
+			[self addChild:labels_[i]];
+		}
     [self addChild:self.arrowsBar];
     [self addChild:self.arrows];
     [self addChild:topDisplayMenu];
@@ -1901,42 +1916,13 @@ static float menuItemPaddingCenter = 50;
 // on "dealloc" you need to release all your retained objects
 - (void) dealloc
 {
-  self.label = nil;
+	for (int i = 0; i < kBMLabel_count; i++) {
+		[labels_[i]release];
+	}
   self.arrows = nil;
   self.arrowsBar = nil;
   
 	[super dealloc];
-}
-
-#pragma mark Action Methods
-
-- (void)displayChanged:(id)sender {
-  CCMenuItemFont *item = sender;
-	
-  switch (item.tag) {
-    case DisplayBottomLineHeight:
-      [self.label setBottomDisplay:kCCLabelBottomDisplayLineHeight];
-      break;
-    case DisplayBottomDescender:
-      [self.label setBottomDisplay:kCCLabelBottomDisplayDescender];
-      break;
-    case DisplayBottomBaseline:
-      [self.label setBottomDisplay:kCCLabelBottomDisplayBaseline];
-      break;
-    case DisplayTopAscender:
-      [self.label setTopDisplay:kCCLabelTopDisplayAscender];
-      break;
-    case DisplayTopCapHeight:
-      [self.label setTopDisplay:kCCLabelTopDisplayCapHeight];
-      break;
-    case DisplayTopXHeight:
-      [self.label setTopDisplay:kCCLabelTopDisplayXHeight];
-      break;
-    default:
-      break;
-  }
-  
-  [self snapArrowsToEdge];
 }
 
 #pragma mark Touch Methods
@@ -1968,7 +1954,8 @@ static float menuItemPaddingCenter = 50;
   self.arrows.position = ccp(self.arrows.position.x, MAX(MIN(location.y, self.arrowsBar.position.y + self.arrowsBar.boundingBox.size.height/2), self.arrowsBar.position.y - self.arrowsBar.boundingBox.size.height/2));
   
   float lineHeight = 1.0 + 8*((self.arrows.position.y - self.arrowsBar.boundingBox.origin.y)/ self.arrowsBar.boundingBox.size.height - 0.5);
-  [self.label setLineHeight: lineHeight];
+	for (int i = 0; i < kBMLabel_count; i++) 
+		[labels_[i] setLineHeight: lineHeight];
 }
 
 #elif defined(__CC_PLATFORM_MAC)
