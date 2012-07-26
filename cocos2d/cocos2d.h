@@ -39,8 +39,8 @@
  */
 
 // 0x00 HI ME LO
-// 00   02 00 00
-#define COCOS2D_VERSION 0x00020000
+// 00   02 01 00
+#define COCOS2D_VERSION 0x00020100
 
 
 //
@@ -160,6 +160,8 @@
 #import "Support/TransformUtils.h"
 #import "Support/CCProfiling.h"
 #import "Support/NSThread+performBlock.h"
+#import "Support/uthash.h"
+#import "Support/utlist.h"
 
 //
 // external

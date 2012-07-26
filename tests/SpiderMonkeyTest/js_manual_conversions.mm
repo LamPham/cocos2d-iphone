@@ -203,7 +203,6 @@ JSBool jsval_to_block_2( JSContext *cx, jsval vp, JSObject *jsthis, jsval arg, j
 	return JS_TRUE;
 }
 
-
 JSBool jsval_to_CGPoint( JSContext *cx, jsval vp, CGPoint *ret )
 {
 	JSObject *tmp_arg;
@@ -212,14 +211,10 @@ JSBool jsval_to_CGPoint( JSContext *cx, jsval vp, CGPoint *ret )
 	
 	JSB_PRECONDITION( js_IsTypedArray( tmp_arg ), @"jsb: Not a TypedArray object");
 
-	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(float)*2, @"jsb: Invalid length");
+	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(CGPoint), @"jsb: Invalid length");
 	
-#ifdef __LP64__
-	float* arg_array = (float*)JS_GetTypedArrayData( tmp_arg );
-	*ret = ccp(arg_array[0], arg_array[1] );	
-#else
 	*ret = *(CGPoint*)JS_GetTypedArrayData( tmp_arg );
-#endif
+
 	return JS_TRUE;
 }
 
@@ -231,14 +226,9 @@ JSBool jsval_to_CGSize( JSContext *cx, jsval vp, CGSize *ret )
 
 	JSB_PRECONDITION( js_IsTypedArray( tmp_arg ), @"jsb: Not a TypedArray object");
 
-	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(float)*2, @"jsb: Invalid length" );
+	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(CGSize), @"jsb: Invalid length" );
 	
-#ifdef __LP64__
-	float* arg_array = (float*)JS_GetTypedArrayData( tmp_arg );
-	*ret = CGSizeMake( arg_array[0], arg_array[1] );
-#else
 	*ret = *(CGSize*)JS_GetTypedArrayData( tmp_arg );
-#endif
 	return JS_TRUE;
 }
 
@@ -250,15 +240,10 @@ JSBool jsval_to_CGRect( JSContext *cx, jsval vp, CGRect *ret )
 
 	JSB_PRECONDITION( js_IsTypedArray( tmp_arg ), @"jsb: Not a TypedArray object");
 
-	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(float)*4, @"jsb: Invalid length");
+	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(CGRect), @"jsb: Invalid length");
 	
-#ifdef __LP64__
-	float* arg_array = (float*)JS_GetTypedArrayData( tmp_arg );
-	*ret = CGRectMake( arg_array[0], arg_array[1], arg_array[2], arg_array[3] );
-
-#else
 	*ret = *(CGRect*)JS_GetTypedArrayData( tmp_arg );
-#endif
+
 	return JS_TRUE;
 }
 
@@ -378,30 +363,39 @@ jsval NSSet_to_jsval( JSContext *cx, NSSet *set)
 
 jsval CGPoint_to_jsval( JSContext *cx, CGPoint p)
 {
+#ifdef __LP64__
+	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT64, 2 );
+#else
 	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT32, 2 );
-	float *buffer = (float*)JS_GetTypedArrayData(typedArray);
-	buffer[0] = p.x;
-	buffer[1] = p.y;
+#endif
+
+	CGPoint *buffer = (CGPoint*)JS_GetTypedArrayData(typedArray);
+	*buffer = p;
 	return OBJECT_TO_JSVAL(typedArray);
 }
 
 jsval CGSize_to_jsval( JSContext *cx, CGSize s)
 {
+#ifdef __LP64__
+	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT64, 2 );
+#else
 	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT32, 2 );
-	float *buffer = (float*)JS_GetTypedArrayData(typedArray);
-	buffer[0] = s.width;
-	buffer[1] = s.height;
+#endif
+	CGSize *buffer = (CGSize*)JS_GetTypedArrayData(typedArray);
+	*buffer = s;
 	return OBJECT_TO_JSVAL(typedArray);
 }
 
 jsval CGRect_to_jsval( JSContext *cx, CGRect s)
 {
+#ifdef __LP64__
+	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT64, 4 );
+#else
 	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT32, 4 );
-	float *buffer = (float*)JS_GetTypedArrayData(typedArray);
-	buffer[0] = s.origin.x;
-	buffer[1] = s.origin.y;
-	buffer[2] = s.size.width;
-	buffer[3] = s.size.height;
+#endif
+
+	CGRect *buffer = (CGRect*)JS_GetTypedArrayData(typedArray);
+	*buffer = s;
 	return OBJECT_TO_JSVAL(typedArray);
 }
 
@@ -451,3 +445,68 @@ jsval longlong_to_jsval( JSContext *cx, long long number )
 	buffer[1] = number & 0xffffffff;
 	return OBJECT_TO_JSVAL(typedArray);		
 }
+
+#pragma mark - cocos2d related stuff
+
+#ifdef JSB_USE_COCOS2D
+jsval ccGridSize_to_jsval( JSContext *cx, ccGridSize p)
+{
+	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_INT32, 2 );
+	float *buffer = (float*)JS_GetTypedArrayData(typedArray);
+	buffer[0] = p.x;
+	buffer[1] = p.y;
+	return OBJECT_TO_JSVAL(typedArray);
+}
+
+JSBool jsval_to_ccGridSize( JSContext *cx, jsval vp, ccGridSize *ret )
+{
+	JSObject *tmp_arg;
+	if( ! JS_ValueToObject( cx, vp, &tmp_arg ) )
+		return JS_FALSE;
+	
+	JSB_PRECONDITION( js_IsTypedArray( tmp_arg ), @"jsb: Not a TypedArray object");
+	
+	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(float)*2, @"jsb: Invalid length");
+	
+#ifdef __LP64__
+	int32_t* arg_array = (int32_t*)JS_GetTypedArrayData( tmp_arg );
+	*ret = ccg(arg_array[0], arg_array[1] );	
+#else
+	*ret = *(ccGridSize*)JS_GetTypedArrayData( tmp_arg );
+#endif
+	return JS_TRUE;
+}
+#endif // JSB_USE_COCOS2D
+
+
+#ifdef JSB_USE_CHIPMUNK
+
+JSBool jsval_to_cpBB( JSContext *cx, jsval vp, cpBB *ret )
+{
+	JSObject *tmp_arg;
+	if( ! JS_ValueToObject( cx, vp, &tmp_arg ) )
+		return JS_FALSE;
+	
+	JSB_PRECONDITION( js_IsTypedArray( tmp_arg ), @"jsb: Not a TypedArray object");
+	
+	JSB_PRECONDITION( JS_GetTypedArrayByteLength( tmp_arg ) == sizeof(cpFloat)*4, @"jsb: Invalid length");
+	
+	*ret = *(cpBB*)JS_GetTypedArrayData( tmp_arg );
+
+	return JS_TRUE;	
+}
+
+jsval cpBB_to_jsval(JSContext *cx, cpBB bb )
+{
+#ifdef __LP64__
+	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT64, 4 );
+#else
+	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::TYPE_FLOAT32, 4 );
+#endif
+	cpBB *buffer = (cpBB*)JS_GetTypedArrayData(typedArray);
+	
+	*buffer = bb;
+	return OBJECT_TO_JSVAL(typedArray);
+}
+
+#endif // JSB_USE_CHIPMUNK

@@ -8,7 +8,7 @@ http://www.cocos2d-iphone.org/forum
 cocos2d logos by Michael Heald (http://www.fullyillustrated.com)
 
 
-cocos2d for iPhone 2.0 authors
+cocos2d for iPhone 2.1 authors
 ------------------------------
 
 Lead Developer:
@@ -29,6 +29,9 @@ People/companies who were/are contributing code to cocos2d for iPhone (alphabeti
 
 * Scott Lembcke (AKA slembcke) (http://chipmunk-physics.net/)
 	Many improvements in the OpenGL ES 2.0 code: better error reporting, better blending function, better shader code
+
+* Viktor Lidholt (http://www.cocosbuilder.com)
+	LabelTTF loads custom fonts correctly on Mac
 
 
 cocos2d for iPhone 2.0 authors

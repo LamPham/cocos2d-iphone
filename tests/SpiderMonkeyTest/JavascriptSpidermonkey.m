@@ -36,7 +36,7 @@
 	// Create an CCGLView with a RGB8 color buffer, and a depth buffer of 24-bits
 	CCGLView *glView = [CCGLView viewWithFrame:[window_ bounds]
 								   pixelFormat:kEAGLColorFormatRGBA8
-								   depthFormat:GL_DEPTH_COMPONENT24_OES
+								   depthFormat:0 //GL_DEPTH_COMPONENT24_OES
 							preserveBackbuffer:NO
 									sharegroup:nil
 								 multiSampling:NO
@@ -88,10 +88,12 @@
 	// On iPad     : "-ipad", "-hd"
 	// On iPhone HD: "-hd"
 	CCFileUtils *sharedFileUtils = [CCFileUtils sharedFileUtils];
-	[sharedFileUtils setEnableFallbackSuffixes:YES];			// Default: NO. No fallback suffixes are going to be used
 	[sharedFileUtils setiPhoneRetinaDisplaySuffix:@"-hd"];		// Default on iPhone RetinaDisplay is "-hd"
 	[sharedFileUtils setiPadSuffix:@"-ipad"];					// Default on iPad is "ipad"
 	[sharedFileUtils setiPadRetinaDisplaySuffix:@"-ipadhd"];	// Default on iPad RetinaDisplay is "-ipadhd"
+
+	if( CC_CONTENT_SCALE_FACTOR() == 2 )
+		[sharedFileUtils setEnableFallbackSuffixes:YES];		// Default: NO. No fallback suffixes are going to be used
 
 	// Assume that PVR images have premultiplied alpha
 	[CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
@@ -104,8 +106,8 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	return YES;
-//	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+//	return YES;
+	return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
 #pragma mark - AppController - Mac
@@ -118,6 +120,14 @@
 	
 	glDisable( GL_DEPTH_TEST );
 	
+	// Mac... Use iPad resources by default
+	CCFileUtils *sharedFileUtils = [CCFileUtils sharedFileUtils];
+	[sharedFileUtils setMacRetinaDisplaySuffix:@"-ipadhd"];
+	[sharedFileUtils setMacSuffix:@"-ipad"];
+	[sharedFileUtils setEnableFallbackSuffixes:YES];		// Default: NO. No fallback suffixes are going to be used
+	
+	[director_ setResizeMode:kCCDirectorResize_AutoScale];
+
 	[self run];
 }
 
@@ -195,17 +205,15 @@
 
 -(void) run
 {
+#if DEBUG
 	// init server
 	[self initThoMoServer];
-
+#endif
 	
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/test-chipmunk.js"];
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/test-label.js"];
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/test-sprite.js"];
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/test-cocos2djs.js"];
-	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/test-actions.js"];
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/test-easeactions.js"];
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/test-tilemap.js"];
+//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/main.js"];
+//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/playground.js"];
+	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/game-main.js"];
+
 }
 @end
 

@@ -8,10 +8,10 @@
 
 require("javascript-spidermonkey/helper.js");
 
-var director = cc.Director.getInstance();
-var _winSize = director.winSize();
-var winSize = {width:_winSize[0], height:_winSize[1]};
-var centerPos = cc.p( winSize.width/2, winSize.height/2 );
+director = cc.Director.getInstance();
+_winSize = director.getWinSize();
+winSize = {width:_winSize[0], height:_winSize[1]};
+centerPos = cc.p( winSize.width/2, winSize.height/2 );
 
 var scenes = []
 var currentScene = 0;
@@ -40,7 +40,7 @@ var restartScene = function () {
 
 var loadScene = function (sceneIdx)
 {
-	_winSize = director.winSize();
+	_winSize = director.getWinSize();
 	winSize = {width:_winSize[0], height:_winSize[1]};
 	centerPos = cc.p( winSize.width/2, winSize.height/2 );
 
@@ -56,59 +56,6 @@ var loadScene = function (sceneIdx)
 //    __jsc__.garbageCollect();
 }
 
-
-cc.LayerGradient.extend = function (prop) {
-    var _super = this.prototype;
-
-    // Instantiate a base class (but only create the instance,
-    // don't run the init constructor)
-    initializing = true;
-    var prototype = new this();
-    initializing = false;
-    fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
-
-    // Copy the properties over onto the new prototype
-    for (var name in prop) {
-        // Check if we're overwriting an existing function
-        prototype[name] = typeof prop[name] == "function" &&
-            typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-            (function (name, fn) {
-                return function () {
-                    var tmp = this._super;
-
-                    // Add a new ._super() method that is the same method
-                    // but on the super-class
-                    this._super = _super[name];
-
-                    // The method only need to be bound temporarily, so we
-                    // remove it when we're done executing
-                    var ret = fn.apply(this, arguments);
-                    this._super = tmp;
-
-                    return ret;
-                };
-            })(name, prop[name]) :
-            prop[name];
-    }
-
-    // The dummy class constructor
-    function Class() {
-        // All construction is actually done in the init method
-        if (!initializing && this.ctor)
-            this.ctor.apply(this, arguments);
-    }
-
-    // Populate our constructed prototype object
-    Class.prototype = prototype;
-
-    // Enforce the constructor to be what we expect
-    Class.prototype.constructor = Class;
-
-    // And make this class extendable
-    Class.extend = arguments.callee;
-
-    return Class;
-};
 
 //
 // Base Layer
@@ -222,13 +169,16 @@ var BaseLayer = cc.LayerGradient.extend({
         var item1 = cc.MenuItemImage.create("b1.png", "b2.png", this, this.backCallback);
         var item2 = cc.MenuItemImage.create("r1.png", "r2.png", this, this.restartCallback);
         var item3 = cc.MenuItemImage.create("f1.png", "f2.png", this, this.nextCallback);
+        var item4 = cc.MenuItemFont.create("back", this, function() { require("javascript-spidermonkey/main.js"); } );
+        item4.setFontSize( 22 );
 
-        var menu = cc.Menu.create(item1, item2, item3 );
+        var menu = cc.Menu.create(item1, item2, item3, item4 );
 
         menu.setPosition( cc.p(0,0) );
         item1.setPosition( cc.p(winSize.width / 2 - 100, 30));
         item2.setPosition( cc.p(winSize.width / 2, 30));
         item3.setPosition( cc.p(winSize.width / 2 + 100, 30));
+        item4.setPosition( cc.p(winSize.width - 60, winSize.height - 30 ) );
 
         this.addChild(menu, 1);
 
@@ -646,10 +596,10 @@ var ActionAnimate = BaseLayer.extend({
         // File animation
         //
         // With 2 loops and reverse
-        var animCache = cc.AnimationCache.sharedAnimationCache();
+        var animCache = cc.AnimationCache.getInstance();
 
         animCache.addAnimationsWithFile("animations/animations-2.plist");
-        var animation2 = animCache.animationByName("dance_1");
+        var animation2 = animCache.getAnimationByName("dance_1");
 
         var action2 = cc.Animate.create(animation2);
         this._tamara.runAction(cc.Sequence.create(action2, action2.reverse()));
@@ -1554,8 +1504,13 @@ function run()
     var layer = new scenes[currentScene]();
     scene.addChild( layer );
 
-    director.runWithScene( scene );
+    var runningScene = director.getRunningScene();
+    if( runningScene == null )
+        director.runWithScene( scene );
+    else
+        director.replaceScene( cc.TransitionFade.create(0.5, scene ) );
 }
 
 run();
+
 

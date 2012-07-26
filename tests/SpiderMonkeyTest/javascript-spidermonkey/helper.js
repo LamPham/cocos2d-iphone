@@ -8,11 +8,100 @@
 //	return floats;
 //}
 
-var cc = cc || {};
+//var cc = cc || {};
+
+//
+// cocos2d constants
+//
+cc.TEXTURE_PIXELFORMAT_RGBA8888 = 0;
+cc.TEXTURE_PIXELFORMAT_RGB888 = 1;
+cc.TEXTURE_PIXELFORMAT_RGB565 = 2;
+cc.TEXTURE_PIXELFORMAT_A8 = 3;
+cc.TEXTURE_PIXELFORMAT_I8 = 4;
+cc.TEXTURE_PIXELFORMAT_AI88 = 5;
+cc.TEXTURE_PIXELFORMAT_RGBA4444 = 6;
+cc.TEXTURE_PIXELFORMAT_RGB5A1 = 7;
+cc.TEXTURE_PIXELFORMAT_PVRTC4 = 8;
+cc.TEXTURE_PIXELFORMAT_PVRTC4 = 9;
+cc.TEXTURE_PIXELFORMAT_DEFAULT = cc.TEXTURE_PIXELFORMAT_RGBA8888;
+
+cc.IMAGE_FORMAT_JPEG = 0;
+cc.IMAGE_FORMAT_PNG = 0;
+
+cc.PROGRESS_TIMER_TYPE_RADIAL = 0;
+cc.PROGRESS_TIMER_TYPE_BAR = 1;
+
+cc.PARTICLE_TYPE_RELATIVE = 0;
+cc.PARTICLE_TYPE_GROUPED = 1;
+cc.PARTICLE_TYPE_FREE = 2;
+cc.PARTICLE_DURATION_INFINITY = -1;
+cc.PARTICLE_MODE_GRAVITY = 0;
+cc.PARTICLE_MODE_RADIUS = 1;
+cc.PARTICLE_START_SIZE_EQUAL_TO_END_SIZE = -1;
+cc.PARTICLE_START_RADIUS_EQUAL_TO_END_RADIUS = -1;
+
+cc.RED = cc.c3(255,0,0);
+cc.GREEN = cc.c3(0,255,0);
+cc.BLUE = cc.c3(0,0,255);
+cc.BLACK = cc.c3(0,0,0);
+cc.WHITE = cc.c3(255,255,255);
+
+cc.POINT_ZERO = cc.p(0,0);
+
+cc._reuse_p0 = cc.p(0,0);
+cc._reuse_p1 = cc.p(0,0);
+cc._reuse_p_index = 0;
+cc._reuse_color3b = cc.c3(255, 255, 255 );
+cc._reuse_color4b = cc.c4(255, 255, 255, 255 );
+cc._reuse_grid = cc.g(0,0);
+
+cc._p = function( x, y )
+{
+    if( cc._reuse_p_index == 0 ) {
+        cc._reuse_p0[0] = x;
+        cc._reuse_p0[1] = y;
+        cc._reuse_p_index = 1;
+        return cc._reuse_p0;
+    } else {
+        cc._reuse_p1[0] = x;
+        cc._reuse_p1[1] = y;
+        cc._reuse_p_index = 0;
+        return cc._reuse_p1;
+    }
+}
+
+cc._g = function( x, y )
+{
+    cc._reuse_grid[0] = x;
+    cc._reuse_grid[1] = y;
+    return cc._reuse_grid;
+}
+
+cc._c3 = function( r, g, b )
+{
+    cc._reuse_color3b[0] = r;
+    cc._reuse_color3b[1] = g;
+    cc._reuse_color3b[2] = b;
+    return cc._reuse_color3b;
+}
+
+cc._c4 = function( r, g, b, a )
+{
+    cc._reuse_color4b[0] = r;
+    cc._reuse_color4b[1] = g;
+    cc._reuse_color4b[2] = b;
+    cc._reuse_color4b[3] = a;
+    return cc._reuse_color4b;
+}
 
 cc.rect = function(x,y,w,h)
 {
-	var rect = new Float32Array(4)
+    var platform = __getPlatform();
+    if( platform.substring(0,7) == 'desktop' )
+        var rect = new Float64Array(4)
+    else
+        var rect = new Float32Array(4)
+
 	rect[0] = x;
 	rect[1] = y;
 	rect[2] = w;
@@ -22,7 +111,11 @@ cc.rect = function(x,y,w,h)
 
 cc.size = function(w,h)
 {
-	var size = new Float32Array(2)
+    var platform = __getPlatform();
+    if( platform.substring(0,7) == 'desktop' )
+        var size = new Float64Array(2)
+    else
+        var size = new Float32Array(2)
 	size[0] = w;
 	size[1] = h;
 	return size;
@@ -91,3 +184,81 @@ goog.base = function(me, opt_methodName, var_args) {
 					'to a method of a different name');
 	}
 };
+
+
+//
+// Simple subclass
+//
+
+cc.Layer.extend = function (prop) {
+    var _super = this.prototype;
+
+    // Instantiate a base class (but only create the instance,
+    // don't run the init constructor)
+    initializing = true;
+    var prototype = new this();
+    initializing = false;
+    fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+
+    // Copy the properties over onto the new prototype
+    for (var name in prop) {
+        // Check if we're overwriting an existing function
+        prototype[name] = typeof prop[name] == "function" &&
+            typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+            (function (name, fn) {
+                return function () {
+                    var tmp = this._super;
+
+                    // Add a new ._super() method that is the same method
+                    // but on the super-class
+                    this._super = _super[name];
+
+                    // The method only need to be bound temporarily, so we
+                    // remove it when we're done executing
+                    var ret = fn.apply(this, arguments);
+                    this._super = tmp;
+
+                    return ret;
+                };
+            })(name, prop[name]) :
+            prop[name];
+    }
+
+    // The dummy class constructor
+    function Class() {
+        // All construction is actually done in the init method
+        if (!initializing && this.ctor)
+            this.ctor.apply(this, arguments);
+    }
+
+    // Populate our constructed prototype object
+    Class.prototype = prototype;
+
+    // Enforce the constructor to be what we expect
+    Class.prototype.constructor = Class;
+
+    // And make this class extendable
+    Class.extend = arguments.callee;
+
+    return Class;
+};
+
+cc.LayerGradient.extend = cc.Layer.extend;
+
+//
+// Chipmunk helpers
+//
+//var cp = cp || {};
+
+cp.vzero  = cp.v(0,0);
+cp._v = cc._p
+
+
+var gl = gl || {};
+gl.NEAREST = 0x2600;
+gl.LINEAR = 0x2601;
+gl.REPEAT = 0x2901;
+gl.CLAMP_TO_EDGE = 0x812F;
+gl.CLAMP_TO_BORDER = 0x812D;
+gl.LINEAR_MIPMAP_NEAREST = 0x2701;
+gl.GL_NEAREST_MIPMAP_NEAREST = 0x2700;

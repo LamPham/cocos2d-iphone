@@ -278,37 +278,41 @@ class SpiderMonkey(object):
         self.manual_methods = {}
         for prop in properties:
             # key value
-            if not prop or len(prop)==0:
-                continue
-            key,value = prop.split('=')
+            try:
+                if not prop or len(prop)==0:
+                    continue
+                key,value = prop.split('=')
 
-            # From Key get: Class # method
-            klass,method = key.split('#')
-            klass = klass.strip()
-            method = method.strip()
+                # From Key get: Class # method
+                klass,method = key.split('#')
+                klass = klass.strip()
+                method = method.strip()
 
-            opts = {}
-            # From value get options
-            options = value.split(';')
-            for o in options:
-                # Options can have their own Key Value
-                if ':' in o:
-                    o = o.replace('"', '')
-                    o = o.replace("'", "")
+                opts = {}
+                # From value get options
+                options = value.split(';')
+                for o in options:
+                    # Options can have their own Key Value
+                    if ':' in o:
+                        o = o.replace('"', '')
+                        o = o.replace("'", "")
 
-                    # o_value might also have some ':'
-                    # So, it should split by the first ':'
-                    o_list = o.split(':')
-                    o_key = o_list[0]
-                    o_val = ':'.join(o_list[1:])
-                else:
-                    o_key = o
-                    o_val = True
-                opts[ o_key ] = o_val
+                        # o_value might also have some ':'
+                        # So, it should split by the first ':'
+                        o_list = o.split(':')
+                        o_key = o_list[0]
+                        o_val = ':'.join(o_list[1:])
+                    else:
+                        o_key = o
+                        o_val = True
+                    opts[ o_key ] = o_val
 
-            expanded_klasses = self.expand_regexp_names( [klass], self.supported_classes )
-            for k in expanded_klasses:
-                self.process_method_properties( k, method, opts )
+                expanded_klasses = self.expand_regexp_names( [klass], self.supported_classes )
+                for k in expanded_klasses:
+                    self.process_method_properties( k, method, opts )
+            except ValueError, e:
+                sys.stderr.write("\nERROR parsing line: %s\n\n" % (prop) )
+                raise
 
     def init_struct_properties( self, properties ):
         self.struct_properties = {}
@@ -1250,15 +1254,15 @@ JSBool %s_%s%s(JSContext *cx, uint32_t argc, jsval *vp) {
             min_args = properties.get('min_args', None)
             max_args = properties.get('max_args', None)
             if min_args != max_args:
-                method_assert_on_arguments = '\tJSB_PRECONDITION( argc >= %d && argc <= %d , @"Invalid number of arguments" );\n' % (min_args, max_args)
+                method_assert_on_arguments = '\tJSB_PRECONDITION( argc >= %d && argc <= %d , "Invalid number of arguments" );\n' % (min_args, max_args)
             elif 'variadic_2_array' in properties:
-                method_assert_on_arguments = '\tJSB_PRECONDITION( argc > 0, @"Invalid number of arguments" );\n'
+                method_assert_on_arguments = '\tJSB_PRECONDITION( argc >= 0, "Invalid number of arguments" );\n'
             else:
                 # default
-                method_assert_on_arguments = '\tJSB_PRECONDITION( argc == %d, @"Invalid number of arguments" );\n' % num_of_args
+                method_assert_on_arguments = '\tJSB_PRECONDITION( argc == %d, "Invalid number of arguments" );\n' % num_of_args
         except KeyError, e:
             # No, it only has required arguments
-            method_assert_on_arguments = '\tJSB_PRECONDITION( argc == %d, @"Invalid number of arguments" );\n' % num_of_args
+            method_assert_on_arguments = '\tJSB_PRECONDITION( argc == %d, "Invalid number of arguments" );\n' % num_of_args
         self.mm_file.write( method_assert_on_arguments )
 
 
@@ -1324,10 +1328,13 @@ JSBool %s_%s%s(JSContext *cx, uint32_t argc, jsval *vp) {
             self.mm_file.write( '\t%s ret_val;\n' % (ret_declared_type ) )
 
         if optional_args != None:
+            else_str = ''
             for i in xrange(max_args+1):
                 if i in properties['calls']:
                     call_real = self.generate_method_call_to_real_object( properties['calls'][i], i, ret_js_type, args_declared_type, class_name, method_type )
-                    self.mm_file.write( '\n\tif( argc == %d ) {\n\t%s\n\t}\n' % (i, call_real) )
+                    self.mm_file.write( '\n\t%sif( argc == %d ) {\n\t%s\n\t}' % ( else_str, i, call_real) )
+                    else_str = 'else '
+            self.mm_file.write( '\n\telse\n\t\treturn JS_FALSE;\n\n' )
         else:
             call_real = self.generate_method_call_to_real_object( s, num_of_args, ret_js_type, args_declared_type, class_name, method_type )
             self.mm_file.write( '\n%s\n' % call_real )
@@ -1434,7 +1441,8 @@ JSBool %s_%s%s(JSContext *cx, uint32_t argc, jsval *vp) {
     def generate_class_header_prefix( self ):
         self.generate_autogenerate_prefix( self.h_file )
         for i in self.import_files:
-            self.h_file.write('#import "%s"\n' % i )
+            if i and i != '':
+                self.h_file.write('#import "%s"\n' % i )
 
     def generate_class_header( self, class_name, parent_name ):
         # JSPROXXY_CCNode
@@ -1893,7 +1901,7 @@ JSBool %s%s(JSContext *cx, uint32_t argc, jsval *vp) {
         self.mm_file.write( template_funcname % ( PROXY_PREFIX, func_name ) )
 
         # Number of arguments
-        self.mm_file.write( '\tJSB_PRECONDITION( argc == %d, @"Invalid number of arguments" );\n' % num_of_args )
+        self.mm_file.write( '\tJSB_PRECONDITION( argc == %d, "Invalid number of arguments" );\n' % num_of_args )
 
     def generate_function_suffix( self ):
         end_template = '''
