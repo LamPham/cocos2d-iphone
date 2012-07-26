@@ -19,22 +19,29 @@
  * SOFTWARE.
  */
 
-#extension GL_OES_standard_derivatives : enable
-
-
-#ifdef GL_ES
-varying mediump vec4 frag_color;
-varying mediump vec2 frag_texcoord;
-#else
-varying vec4 frag_color;
-varying vec2 frag_texcoord;
-#endif
-
-void main()
-{
-#if defined GL_OES_standard_derivatives
-	gl_FragColor = frag_color*smoothstep(0.0, length(fwidth(frag_texcoord)), 1.0 - length(frag_texcoord));
-#else
-	gl_FragColor = frag_color*step(0.0, 1.0 - length(frag_texcoord));
-#endif
-}
+"																	\n\
+#ifdef GL_ES														\n\
+attribute mediump vec4 a_position;									\n\
+attribute mediump vec2 a_texcoord;									\n\
+attribute mediump vec4 a_color;										\n\
+																	\n\
+varying mediump vec4 v_color;										\n\
+varying mediump vec2 v_texcoord;									\n\
+																	\n\
+#else																\n\
+attribute vec4 a_position;											\n\
+attribute vec2 a_texcoord;											\n\
+attribute vec4 a_color;												\n\
+																	\n\
+varying vec4 v_color;												\n\
+varying vec2 v_texcoord;											\n\
+#endif																\n\
+																	\n\
+void main()															\n\
+{																	\n\
+	v_color = vec4(a_color.rgb * a_color.a, a_color.a);				\n\
+	v_texcoord = a_texcoord;										\n\
+																	\n\
+	gl_Position = CC_MVPMatrix * a_position;						\n\
+}																	\n\
+";

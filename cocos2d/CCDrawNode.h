@@ -19,27 +19,39 @@
  * SOFTWARE.
  */
 
-#import "cocos2d.h"
+/*
+ * Code copied & pasted from SpacePatrol game https://github.com/slembcke/SpacePatrol
+ *
+ * Renamed and added some changes for cocos2d
+ *
+ */
 
-// I don't want to require Chipmunk to use HMVectorNode.
-// But I don't want to maintain an entirely different version either.
-#ifndef CHIPMUNK_HEADER
-	typedef CGFloat	cpFloat;
-	typedef CGPoint cpVect;
-#endif
+#import "CCNode.h"
 
-typedef ccColor4F Color;
+/** CCDrawNode
+ Node that draws dots, segments and polygons.
+ Faster than the "drawing primitives" since they it draws everything in one single batch.
+ 
+ @since v2.1
+ */
 
-
-@interface HMVectorNode : CCNode
-
--(void)drawDot:(cpVect)pos radius:(cpFloat)radius color:(Color)color;
--(void)drawSegmentFrom:(cpVect)a to:(cpVect)b radius:(cpFloat)radius color:(Color)color;
--(void)drawPolyWithVerts:(cpVect *)verts count:(NSUInteger)count width:(cpFloat)width fill:(Color)fill line:(Color)line;
-
-/// Clear the geometry in the node's buffer.
--(void)clear;
+@interface CCDrawNode : CCNode
+{
+	BOOL _dirty;
+}
 
 @property(nonatomic, assign) ccBlendFunc blendFunc;
+
+/** draw a dot at a position, with a given radius and color */
+-(void)drawDot:(CGPoint)pos radius:(CGFloat)radius color:(ccColor4F)color;
+
+/** draw a segment with a radius and color */
+-(void)drawSegmentFrom:(CGPoint)a to:(CGPoint)b radius:(CGFloat)radius color:(ccColor4F)color;
+
+/** draw a polygon with a fill color and line color */
+-(void)drawPolyWithVerts:(CGPoint*)verts count:(NSUInteger)count fillColor:(ccColor4F)fill borderWidth:(CGFloat)width  borderColor:(ccColor4F)line;
+
+/** Clear the geometry in the node's buffer. */
+-(void)clear;
 
 @end

@@ -513,14 +513,14 @@ class SpiderMonkey(object):
         # PRECOND: Structure must be valid
 
         # BridgeSupport to TypedArray
-        bs_to_type_array =  { 'c' : 'TYPE_INT8',
-                              'C' : 'TYPE_UINT8',
-                              's' : 'TYPE_INT16',
-                              'S' : 'TYPE_UINT16',
-                              'i' : 'TYPE_INT32',
-                              'I' : 'TYPE_UINT32',
-                              'f' : 'TYPE_FLOAT32',
-                              'd' : 'TYPE_FLOAT64',
+        bs_to_type_array =  { 'c' : 'JS_NewInt8Array',
+                              'C' : 'JS_NewUint8Array',
+                              's' : 'JS_NewInt16Array',
+                              'S' : 'JS_NewUint16Array',
+                              'i' : 'JS_NewInt32Array',
+                              'I' : 'JS_NewUint32Array',
+                              'f' : 'JS_NewFloat32Array',
+                              'd' : 'JS_NewFloat64Array',
                               }
 
         inner = struct.replace('{', '')
@@ -598,6 +598,13 @@ class SpiderMonkey(object):
 
             if method['selector'].startswith('init') and dt == 'id':
                 return True
+        return False
+
+    def requires_swizzle( self, class_name ):
+        if class_name in self.callback_methods:
+            for m in self.callback_methods[ class_name ]:
+                if not self.get_method_property( class_name, m, 'no_swizzle' ):
+                    return True
         return False
 
     def get_method_property( self, class_name, method_name, prop ):
@@ -749,9 +756,10 @@ JSBool %s_constructor(JSContext *cx, uint32_t argc, jsval *vp)
     def generate_destructor( self, class_name ):
         destructor_template = '''
 // Destructor
-void %s_finalize(JSContext *cx, JSObject *obj)
+void %s_finalize(JSFreeOp *fop, JSObject *obj)
 {
 	CCLOGINFO(@"spidermonkey: finalizing JS object %%p (%s)", obj);
+	del_proxy_for_jsobject( obj );
 }
 '''
         proxy_class_name = '%s%s' % (PROXY_PREFIX, class_name )
@@ -761,7 +769,7 @@ void %s_finalize(JSContext *cx, JSObject *obj)
     #
     # Method generator functions
     #
-    def generate_method_call_to_real_object( self, selector_name, num_of_args, ret_js_type, args_declared_type, class_name, method_type ):
+    def generate_method_call_to_real_object( self, selector_name, num_of_args, ret_js_type, args_declared_type, args_js_type, class_name, method_type ):
 
         args = selector_name.split(':')
 
@@ -796,8 +804,11 @@ void %s_finalize(JSContext *cx, JSObject *obj)
             elif i+1 > num_of_args:
                 break
             elif arg:   # empty arg?
-                # cast needed to prevent compiler errors
-                call += '%s:(%s)arg%d ' % (arg, args_declared_type[i], i)
+                if args_js_type[i] == 'o':
+                    call += '%s:arg%d ' % (arg, i )
+                else:
+                    # cast needed to prevent compiler errors
+                    call += '%s:(%s)arg%d ' % (arg, args_declared_type[i], i)
 
         call += ' ];';
 
@@ -850,8 +861,8 @@ void %s_finalize(JSContext *cx, JSObject *obj)
     #
     def generate_retval_struct_automatic( self, declared_type, js_type ):
         template = '''
-	JSObject *typedArray = js_CreateTypedArray(cx, js::TypedArray::%s, %d );
-	%s* buffer = (%s*)JS_GetTypedArrayData(typedArray);
+	JSObject *typedArray = %s(cx, %d );
+	%s* buffer = (%s*)JS_GetArrayBufferViewData(typedArray, cx);
 	*buffer = ret_val;
 	JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(typedArray));
 	'''
@@ -1091,7 +1102,7 @@ void %s_finalize(JSContext *cx, JSObject *obj)
         template = '''
 	JSObject *tmp_arg%d;
 	ok &= JS_ValueToObject( cx, *argvp++, &tmp_arg%d );
-	arg%d = *(%s*)JS_GetTypedArrayData( tmp_arg%d);
+	arg%d = *(%s*)JS_GetArrayBufferViewData( tmp_arg%d, cx );
 '''
         proxy_class_name = PROXY_PREFIX + arg_declared_type
 
@@ -1230,8 +1241,8 @@ void %s_finalize(JSContext *cx, JSObject *obj)
 JSBool %s_%s%s(JSContext *cx, uint32_t argc, jsval *vp) {
 '''
         template_init = '''
-	JSObject* obj = (JSObject *)JS_THIS_OBJECT(cx, vp);
-	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
+	JSObject* jsthis = (JSObject *)JS_THIS_OBJECT(cx, vp);
+	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(jsthis);
 
 	NSCAssert( proxy && %s[proxy realObj], @"Invalid Proxy object");
 '''
@@ -1331,12 +1342,12 @@ JSBool %s_%s%s(JSContext *cx, uint32_t argc, jsval *vp) {
             else_str = ''
             for i in xrange(max_args+1):
                 if i in properties['calls']:
-                    call_real = self.generate_method_call_to_real_object( properties['calls'][i], i, ret_js_type, args_declared_type, class_name, method_type )
+                    call_real = self.generate_method_call_to_real_object( properties['calls'][i], i, ret_js_type, args_declared_type, args_js_type, class_name, method_type )
                     self.mm_file.write( '\n\t%sif( argc == %d ) {\n\t%s\n\t}' % ( else_str, i, call_real) )
                     else_str = 'else '
             self.mm_file.write( '\n\telse\n\t\treturn JS_FALSE;\n\n' )
         else:
-            call_real = self.generate_method_call_to_real_object( s, num_of_args, ret_js_type, args_declared_type, class_name, method_type )
+            call_real = self.generate_method_call_to_real_object( s, num_of_args, ret_js_type, args_declared_type, args_js_type, class_name, method_type )
             self.mm_file.write( '\n%s\n' % call_real )
 
         ret_string = self.generate_retval( ret_declared_type, ret_js_type )
@@ -1419,7 +1430,7 @@ JSBool %s_%s%s(JSContext *cx, uint32_t argc, jsval *vp) {
 #import <objc/runtime.h>
 #import "JRSwizzle.h"
 
-#import "jstypedarray.h"
+#import "jsfriendapi.h"
 #import "js_bindings_config.h"
 #import "ScriptingCore.h"
 
@@ -1598,7 +1609,6 @@ extern JSClass *%s_class;
 	}
 }
 '''
-
         if class_name in self.callback_methods:
             self.mm_file.write(  template_prefix % ( class_name, class_name ) )
             for m in self.callback_methods[ class_name ]:
@@ -1640,7 +1650,8 @@ extern JSClass *%s_class;
 
         self.mm_file.write( create_object_template_suffix )
 
-        self.generate_implementation_swizzle( class_name )
+        if self.requires_swizzle( class_name ):
+            self.generate_implementation_swizzle( class_name )
 
         self.generate_implementation_callback( class_name )
 
@@ -1845,7 +1856,7 @@ void %s_createClass(JSContext *cx, JSObject* globalObj, const char* name )
 
     def generate_function_mm_prefix( self ):
         import_template = '''
-#import "jstypedarray.h"
+#import "jsfriendapi.h"
 #import "ScriptingCore.h"
 #import "js_manual_conversions.h"
 #import "js_bindings_config.h"

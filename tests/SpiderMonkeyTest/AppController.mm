@@ -7,7 +7,7 @@
 #import "cocos2d.h"
 
 // local import
-#import "JavascriptSpidermonkey.h"
+#import "AppController.h"
 #import "ScriptingCore.h"
 #import "js_manual_conversions.h"
 
@@ -65,18 +65,8 @@
 	[director_ setProjection:kCCDirectorProjection3D];
 
 	// Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
-	if( ! [director_ enableRetinaDisplay:YES] )
-		CCLOG(@"Retina Display Not supported");
-
-	navController_ = [[UINavigationController alloc] initWithRootViewController:director_];
-	navController_.navigationBarHidden = YES;
-
-	// set the Navigation Controller as the root view controller
-//	[window_ setRootViewController:rootViewController_];
-	[window_ addSubview:navController_.view];
-
-	// make main window visible
-	[window_ makeKeyAndVisible];
+//	if( ! [director_ enableRetinaDisplay:YES] )
+//		CCLOG(@"Retina Display Not supported");
 
 	// Default texture format for PNG/BMP/TIFF/JPEG/GIF images
 	// It can be RGBA8888, RGBA4444, RGB5_A1, RGB565
@@ -97,6 +87,17 @@
 
 	// Assume that PVR images have premultiplied alpha
 	[CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
+
+	// Create a Navigation Controller with the Director
+	navController_ = [[UINavigationController alloc] initWithRootViewController:director_];
+	navController_.navigationBarHidden = YES;
+	
+	// set the Navigation Controller as the root view controller
+	[window_ addSubview:navController_.view];	// Generates flicker.
+//	[window_ setRootViewController:navController_];
+	
+	// make main window visible
+	[window_ makeKeyAndVisible];
 
 
 	[self run];
@@ -120,6 +121,9 @@
 	
 	glDisable( GL_DEPTH_TEST );
 	
+	// Assume that PVR images have premultiplied alpha
+	[CCTexture2D PVRImagesHavePremultipliedAlpha:YES];
+
 	// Mac... Use iPad resources by default
 	CCFileUtils *sharedFileUtils = [CCFileUtils sharedFileUtils];
 	[sharedFileUtils setMacRetinaDisplaySuffix:@"-ipadhd"];
@@ -170,12 +174,12 @@
 			}
 			else if(JSVAL_IS_DOUBLE(out))
 			{
-				string = [NSString stringWithFormat:@"Result(double): %d.\n", JSVAL_TO_DOUBLE(out)];
+				string = [NSString stringWithFormat:@"Result(double): %f.\n", JSVAL_TO_DOUBLE(out)];
 			}
 			else if(JSVAL_IS_STRING(out)) {
 				NSString *tmp;
 				jsval_to_nsstring( [[ScriptingCore sharedInstance] globalContext], out, &tmp );
-				string = [NSString stringWithFormat:@"Result(string): %d.\n", tmp];
+				string = [NSString stringWithFormat:@"Result(string): %@.\n", tmp];
 			}
 			else if (JSVAL_IS_VOID(out) )
 				string = @"Result(void):\n";
@@ -210,9 +214,12 @@
 	[self initThoMoServer];
 #endif
 	
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/main.js"];
-//	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/playground.js"];
-	[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/game-main.js"];
+	NSString *name = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleExecutable"];
+	
+	if( [name isEqual:@"Javascript Game"] )
+		[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/game-main.js"];
+	else 
+		[[ScriptingCore sharedInstance] runScript:@"javascript-spidermonkey/main.js"];	
 
 }
 @end

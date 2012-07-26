@@ -58,7 +58,7 @@ JSBool JSPROXY_NSObject_constructor(JSContext *cx, uint32_t argc, jsval *vp)
 }
 
 // Destructor
-void JSPROXY_NSObject_finalize(JSContext *cx, JSObject *obj)
+void JSPROXY_NSObject_finalize(JSFreeOp *fop, JSObject *obj)
 {
 	CCLOGINFO(@"spidermonkey: finalizing JS object %p (NSObject)", obj);
 
@@ -209,6 +209,11 @@ void JSPROXY_NSObject_createClass(JSContext* cx, JSObject* globalObj, const char
 	// override
 }
 
+- (NSString*) description
+{
+	return [NSString stringWithFormat:@"<%@ = %p | JSObject = %p>", [self class], self, _jsObj];
+}
+
 -(id) initWithJSObject:(JSObject*)object class:(Class)klass
 {
 	self = [super init];
@@ -220,7 +225,16 @@ void JSPROXY_NSObject_createClass(JSContext* cx, JSObject* globalObj, const char
 //		JS_SetPrivate(jsobj, self);
 		set_proxy_for_jsobject(self, _jsObj);
 
-		JS_AddNamedObjectRoot( [[ScriptingCore sharedInstance] globalContext], &_jsObj, [[self description] UTF8String] );
+		// Can't use "[self description] since it returns an autorelease version. The string needs to be copied to an static location
+		const char *tmp= [[self description] UTF8String];
+		size_t len = strlen(tmp);
+		_description = (char*)malloc(len+1);
+		strcpy(_description, tmp );
+		
+		JSBool ok = JS_AddNamedObjectRoot( [[ScriptingCore sharedInstance] globalContext], &_jsObj, _description  );
+		if( ! ok )
+			CCLOGWARN(@"Failed to add object to root");
+		
 	}
 	
 	return self;
@@ -232,9 +246,11 @@ void JSPROXY_NSObject_createClass(JSContext* cx, JSObject* globalObj, const char
 	CCLOGINFO(@"spidermonkey: deallocing %@", self);
 
 	del_proxy_for_jsobject(_jsObj);
+	
+	if( _description )
+		free(_description);
 
 	JS_RemoveObjectRoot( [[ScriptingCore sharedInstance] globalContext], &_jsObj);
-
 	
 	[super dealloc];
 }
@@ -271,7 +287,7 @@ JSBool JSPROXY_NSEvent_getLocation(JSContext *cx, uint32_t argc, jsval *vp) {
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	NSCAssert( proxy && [proxy realObj], @"Object already initialzied. error");
 	
-	JSB_PRECONDITION( argc == 0, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 0, "Invalid number of arguments" );
 	
 	NSEvent* event = (NSEvent*) [proxy realObj];
 	
@@ -291,7 +307,7 @@ JSBool JSPROXY_NSEvent_getDelta(JSContext *cx, uint32_t argc, jsval *vp) {
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	NSCAssert( proxy && [proxy realObj], @"Object already initialzied. error");
 	
-	JSB_PRECONDITION( argc == 0, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 0, "Invalid number of arguments" );
 	
 	NSEvent* real = (NSEvent*) [proxy realObj];
 	CGFloat x = [real deltaX];
@@ -309,7 +325,7 @@ JSBool JSPROXY_NSEvent_getDelta(JSContext *cx, uint32_t argc, jsval *vp) {
 
 
 // Destructor
-void JSPROXY_NSEvent_finalize(JSContext *cx, JSObject *obj)
+void JSPROXY_NSEvent_finalize(JSFreeOp *fop, JSObject *obj)
 {
 	CCLOGINFO(@"spidermonkey: finalizing JS object %p (NSEvent)", obj);
 }
@@ -396,7 +412,7 @@ JSBool JSPROXY_UITouch_location(JSContext *cx, uint32_t argc, jsval *vp) {
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	NSCAssert( proxy && [proxy realObj], @"Object already initialzied. error");
 	
-	JSB_PRECONDITION( argc == 0, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 0, "Invalid number of arguments" );
 	
 	UITouch* real = (UITouch*) [proxy realObj];
 	
@@ -416,7 +432,7 @@ JSBool JSPROXY_UITouch_delta(JSContext *cx, uint32_t argc, jsval *vp) {
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	NSCAssert( proxy && [proxy realObj], @"Object already initialzied. error");
 	
-	JSB_PRECONDITION( argc == 0, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 0, "Invalid number of arguments" );
 	
 	UITouch* real = (UITouch*) [proxy realObj];
 	UIView *view = [real view];
@@ -435,7 +451,7 @@ JSBool JSPROXY_UITouch_delta(JSContext *cx, uint32_t argc, jsval *vp) {
 }
 
 // Destructor
-void JSPROXY_UITouch_finalize(JSContext *cx, JSObject *obj)
+void JSPROXY_UITouch_finalize(JSFreeOp *fop, JSObject *obj)
 {
 	CCLOGINFO(@"spidermonkey: finalizing JS object %p (UITouch)", obj);
 }
@@ -560,7 +576,7 @@ JSBool JSPROXY_UIAccelerometer_constructor(JSContext *cx, uint32_t argc, jsval *
 }
 
 // Destructor
-void JSPROXY_UIAccelerometer_finalize(JSContext *cx, JSObject *obj)
+void JSPROXY_UIAccelerometer_finalize(JSFreeOp *fop, JSObject *obj)
 {
 	CCLOGINFO(@"spidermonkey: finalizing JS object %p (CCDirector)", obj);
 }
@@ -568,7 +584,7 @@ void JSPROXY_UIAccelerometer_finalize(JSContext *cx, JSObject *obj)
 // Arguments: 
 // Ret value: UIAccelerometer (o)
 JSBool JSPROXY_UIAccelerometer_sharedAccelerometer_static(JSContext *cx, uint32_t argc, jsval *vp) {
-	JSB_PRECONDITION( argc == 0, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 0, "Invalid number of arguments" );
 	UIAccelerometer* ret_val;
 	
 	ret_val = [UIAccelerometer sharedAccelerometer];
@@ -586,7 +602,7 @@ JSBool JSPROXY_UIAccelerometer_getUpdateInterval(JSContext *cx, uint32_t argc, j
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	NSCAssert( proxy && [proxy realObj], @"Object already initialzied. error");
 	
-	JSB_PRECONDITION( argc == 0, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 0, "Invalid number of arguments" );
 	
 	UIAccelerometer* real = (UIAccelerometer*) [proxy realObj];
 	
@@ -602,7 +618,7 @@ JSBool JSPROXY_UIAccelerometer_setUpdateInterval(JSContext *cx, uint32_t argc, j
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	NSCAssert( proxy && [proxy realObj], @"Object already initialzied. error");
 	
-	JSB_PRECONDITION( argc == 1, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 1, "Invalid number of arguments" );
 	
 	jsval *argvp = JS_ARGV(cx,vp);
 	double interval;
@@ -622,7 +638,7 @@ JSBool JSPROXY_UIAccelerometer_setDelegate(JSContext *cx, uint32_t argc, jsval *
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	NSCAssert( proxy && [proxy realObj], @"Object already initialzied. error");
 	
-	JSB_PRECONDITION( argc == 2, @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 2, "Invalid number of arguments" );
 
 	UIAccelerometer* real = (UIAccelerometer*) [proxy realObj];
 

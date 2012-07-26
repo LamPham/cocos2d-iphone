@@ -13,10 +13,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A0D6BFEB159B6A25008EED97"
-               BuildableName = "JavascriptTest.app"
-               BlueprintName = "JavascriptTest"
-               ReferencedContainer = "container:cocos2d-ios.xcodeproj">
+               BlueprintIdentifier = "A09C8CBA1566FB4100ADFDA9"
+               BuildableName = "Javascript Tests.app"
+               BlueprintName = "Javascript Tests"
+               ReferencedContainer = "container:cocos2d-mac.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -31,10 +31,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A0D6BFEB159B6A25008EED97"
-            BuildableName = "JavascriptTest.app"
-            BlueprintName = "JavascriptTest"
-            ReferencedContainer = "container:cocos2d-ios.xcodeproj">
+            BlueprintIdentifier = "A09C8CBA1566FB4100ADFDA9"
+            BuildableName = "Javascript Tests.app"
+            BlueprintName = "Javascript Tests"
+            ReferencedContainer = "container:cocos2d-mac.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -46,15 +46,14 @@
       buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
-      enablesOpenGLESFrameCapture = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A0D6BFEB159B6A25008EED97"
-            BuildableName = "JavascriptTest.app"
-            BlueprintName = "JavascriptTest"
-            ReferencedContainer = "container:cocos2d-ios.xcodeproj">
+            BlueprintIdentifier = "A09C8CBA1566FB4100ADFDA9"
+            BuildableName = "Javascript Tests.app"
+            BlueprintName = "Javascript Tests"
+            ReferencedContainer = "container:cocos2d-mac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -69,10 +68,10 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "A0D6BFEB159B6A25008EED97"
-            BuildableName = "JavascriptTest.app"
-            BlueprintName = "JavascriptTest"
-            ReferencedContainer = "container:cocos2d-ios.xcodeproj">
+            BlueprintIdentifier = "A09C8CBA1566FB4100ADFDA9"
+            BuildableName = "Javascript Tests.app"
+            BlueprintName = "Javascript Tests"
+            ReferencedContainer = "container:cocos2d-mac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

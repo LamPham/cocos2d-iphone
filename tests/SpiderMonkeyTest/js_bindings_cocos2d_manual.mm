@@ -2,6 +2,8 @@
 // cocos2d manually generated bindings
 //
 
+#import "jsfriendapi.h"
+
 #import "js_bindings_config.h"
 #import "ScriptingCore.h"
 
@@ -16,7 +18,7 @@ JSBool JSPROXY_CCMenuItem_setBlock_( JSContext *cx, uint32_t argc, jsval *vp ) {
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	
 	NSCAssert( proxy && [proxy realObj], @"Invalid Proxy object");
-	JSB_PRECONDITION( argc == 2, @"Invalid number of arguments. Expecting 2 args" );
+	JSB_PRECONDITION( argc == 2, "Invalid number of arguments. Expecting 2 args" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	js_block js_func;
 	JSObject *js_this;
@@ -39,7 +41,7 @@ JSBool JSPROXY_CCMenuItem_setBlock_( JSContext *cx, uint32_t argc, jsval *vp ) {
 
 // "create" in JS
 JSBool JSPROXY_CCMenuItemFont_itemWithString_block__static(JSContext *cx, uint32_t argc, jsval *vp) {
-	JSB_PRECONDITION( argc ==1 || argc == 3, @"Invalid number of arguments. Expecting 1 or 3 args" );
+	JSB_PRECONDITION( argc ==1 || argc == 3, "Invalid number of arguments. Expecting 1 or 3 args" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
 	NSString *normal;
@@ -72,7 +74,7 @@ JSBool JSPROXY_CCMenuItemFont_itemWithString_block__static(JSContext *cx, uint32
 
 // "create" in JS
 JSBool JSPROXY_CCMenuItemLabel_itemWithLabel_block__static(JSContext *cx, uint32_t argc, jsval *vp) {
-	JSB_PRECONDITION( argc ==1 || argc == 3, @"Invalid number of arguments. Expecting 1 or 3 args" );
+	JSB_PRECONDITION( argc ==1 || argc == 3, "Invalid number of arguments. Expecting 1 or 3 args" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
 	CCNode<CCLabelProtocol, CCRGBAProtocol> *label;
@@ -105,7 +107,7 @@ JSBool JSPROXY_CCMenuItemLabel_itemWithLabel_block__static(JSContext *cx, uint32
 
 // "create" in JS
 JSBool JSPROXY_CCMenuItemImage_itemWithNormalImage_selectedImage_disabledImage_block__static(JSContext *cx, uint32_t argc, jsval *vp) {
-	JSB_PRECONDITION( argc >=2 && argc <= 5, @"Invalid number of arguments. Expecting: 2 <= args <= 5" );
+	JSB_PRECONDITION( argc >=2 && argc <= 5, "Invalid number of arguments. Expecting: 2 <= args <= 5" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
 	NSString *normal, *selected, *disabled;
@@ -149,7 +151,7 @@ JSBool JSPROXY_CCMenuItemImage_itemWithNormalImage_selectedImage_disabledImage_b
 
 // "create" in JS
 JSBool JSPROXY_CCMenuItemSprite_itemWithNormalSprite_selectedSprite_disabledSprite_block__static(JSContext *cx, uint32_t argc, jsval *vp) {
-	JSB_PRECONDITION( argc >=2 && argc <= 5 && argc != 3, @"Invalid number of arguments. 2 <= args <= 5 but not 3" );
+	JSB_PRECONDITION( argc >=2 && argc <= 5 && argc != 3, "Invalid number of arguments. 2 <= args <= 5 but not 3" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
 	CCSprite *normal, *selected, *disabled;
@@ -191,7 +193,7 @@ JSBool JSPROXY_CCMenuItemSprite_itemWithNormalSprite_selectedSprite_disabledSpri
 
 JSBool JSPROXY_CCCallBlockN_actionWithBlock__static(JSContext *cx, uint32_t argc, jsval *vp)
 {
-	JSB_PRECONDITION( argc == 2 || argc == 3,  @"Invalid number of arguments" );
+	JSB_PRECONDITION( argc == 2 || argc == 3,  "Invalid number of arguments" );
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
 	js_block js_func;
@@ -231,7 +233,7 @@ JSBool JSPROXY_CCTexture2D_setTexParameters_(JSContext *cx, uint32_t argc, jsval
 	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
 	
 	NSCAssert( proxy && [proxy realObj], @"Invalid Proxy object");
-	JSB_PRECONDITION( argc == 4, @"Invalid number of arguments. Expecting 4 args" );
+	JSB_PRECONDITION( argc == 4, "Invalid number of arguments. Expecting 4 args" );
 
 	jsval *argvp = JS_ARGV(cx,vp);
 	JSBool ok = JS_TRUE;
@@ -255,5 +257,59 @@ JSBool JSPROXY_CCTexture2D_setTexParameters_(JSContext *cx, uint32_t argc, jsval
 	JS_SET_RVAL(cx, vp, JSVAL_VOID);
 	
 	return JS_TRUE;		
+}
+
+// Arguments: Array of points, fill color (ccc4f), width(float), border color (ccc4f)
+// Ret value: void
+JSBool JSPROXY_CCDrawNode_drawPolyWithVerts_count_fillColor_borderWidth_borderColor_(JSContext *cx, uint32_t argc, jsval *vp)
+{
+	JSObject* obj = (JSObject *)JS_THIS_OBJECT(cx, vp);
+	JSPROXY_NSObject *proxy = get_proxy_for_jsobject(obj);
+	
+	NSCAssert( proxy && [proxy realObj], @"Invalid Proxy object");
+	JSB_PRECONDITION( argc == 4, "Invalid number of arguments" );
+	jsval *argvp = JS_ARGV(cx,vp);
+	JSBool ok = JS_TRUE;
+	JSObject *argArray; ccColor4F argFillColor; double argWidth; ccColor4F argBorderColor; 
+	
+	ok &= JS_ValueToObject(cx, *argvp++, &argArray);
+	if( ! (argArray && JS_IsArrayObject(cx, argArray) ) )
+	   return JS_FALSE;
+	
+	JSObject *tmp_arg;
+	ok &= JS_ValueToObject( cx, *argvp++, &tmp_arg );
+	argFillColor = *(ccColor4F*)JS_GetArrayBufferViewData( tmp_arg, cx );
+
+	ok &= JS_ValueToNumber( cx, *argvp++, &argWidth );
+	
+	ok &= JS_ValueToObject( cx, *argvp++, &tmp_arg );
+	argBorderColor = *(ccColor4F*)JS_GetArrayBufferViewData( tmp_arg, cx );
+
+	if( ! ok )
+		return JS_FALSE;
+	
+	{
+		uint32_t l;
+		if( ! JS_GetArrayLength(cx, argArray, &l) )
+			return JS_FALSE;
+		
+		CGPoint verts[ l ];
+		CGPoint p;
+
+		for( int i=0; i<l; i++ ) {
+			jsval pointvp;
+			if( ! JS_GetElement(cx, argArray, i, &pointvp) )
+				return JS_FALSE;
+			if( ! jsval_to_CGPoint(cx, pointvp, &p) )
+				continue;
+			
+			verts[i] = p;
+		}
+		
+		CCDrawNode *real = (CCDrawNode*) [proxy realObj];
+		[real drawPolyWithVerts:verts count:l fillColor:argFillColor borderWidth:argWidth borderColor:argBorderColor];
+	}
+	JS_SET_RVAL(cx, vp, JSVAL_VOID);
+	return JS_TRUE;	
 }
 
