@@ -846,7 +846,7 @@ void FNTConfigRemoveCache( void )
 		
 		if (nextFontPositionX == 0) {
 			// Testing if removing the xOffset of the first character helps with horizontal alignment
-			lineOffset = -(fontDef.xOffset);
+			//lineOffset = -(fontDef.xOffset);
 		}
         
 		CGRect rect = fontDef.rect;
